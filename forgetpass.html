@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forgot Password</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="./cdns/css/fontawesome/all.min.css">
+    <link rel="stylesheet" href="./cdns/css/fontawesome/fontawesome.min.css">
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="./cdns/css/googlefont.css">
+    <!-- Bootstrap core CSS -->
+    <link href="./cdns/css/bootstrap.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="./cdns/css/md.css" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+
+    <!-- JQuery -->
+    <script type="text/javascript" src="./cdns/js/jquery.js"></script>
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript" src="./cdns/js/bootstraptooltips.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="./cdns/js/bootstrapcore.js"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="./cdns/js/md.js"></script>
+    <script type="text/javascript" src="./forgetpass.js"></script>
+</head>
+
+<body>
+
+    <form id="forgotPasswordForm" method="POST">
+
+        <div class="form-container card">
+            <div class="header-container">
+                <button type="button" class="btn btn-link btn-floating mx-1" onclick="history.back()">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <h2>Forgot Password</h2>
+            </div>
+            <p>Enter your email address below and we'll send you a link to reset your password.</p>
+            <div class="form-outline mb-4">
+                <input type="email" id="loginEmail" name="email" class="form-control" placeholder="Email Address"
+                    required />
+            </div>
+            <button type="submit" class="btn btn-primary btn-block mb-4">Send Reset OTP</button>
+
+            <!-- Message container for showing success/error messages -->
+            <div id="messageContainer"></div>
+        </div>
+    </form>
+
+</body>
+
+</html>

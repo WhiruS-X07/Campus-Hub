@@ -1,0 +1,72 @@
+body,
+html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f9fa;
+}
+
+.form-container {
+    width: 100%;
+    max-width: 600px;
+    padding: 30px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Page-specific styling for Forgot Password header */
+.header-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-container button {
+    display: flex;
+    align-items: center;
+    padding: 0;
+    border: none;
+    background: none;
+    color: inherit;
+    font-size: inherit;
+    cursor: pointer;
+}
+
+.header-container h2 {
+    margin: 0;
+    font-weight: 600;
+}
+
+/* Container for password input and icon */
+.password-container {
+    position: relative;
+    width: 100%;
+}
+
+/* Style the password input */
+.password-container input {
+    width: 100%;
+    padding-right: 45px; /* Space for the eye icon */
+    box-sizing: border-box; /* Ensure padding doesn't break the layout */
+}
+
+/* Style the eye icon */
+.password-container .password-toggle {
+    position: absolute;
+    right: 10px; /* Adjust to place it inside the input field */
+    top: 50%;
+    transform: translateY(-50%); /* Center vertically */
+    cursor: pointer;
+    color: #888; /* Adjust color */
+    font-size: 1.2em; /* Adjust size */
+}
+
+/* Make sure the form fields maintain consistent padding */
+.password-container input:focus {
+    outline: none;
+    border-color: #007bff;
+}
