@@ -1,4 +1,14 @@
-<?php include('header.php') ?>
+<?php include('includes/header.php') ?>
+<?php include('includes/config.php') ?>
+<?php
+// Query to fetch courses
+$sql_courses = "SELECT * FROM courses";
+$result_courses = $conn->query($sql_courses);
+
+// Query to fetch teachers
+$sql_teachers = "SELECT * FROM teachers";
+$result_teachers = $conn->query($sql_teachers);
+?>
 
 <body>
   <!--Navbar -->
@@ -21,7 +31,6 @@
         </li>
       </ul>
       <ul class="navbar-nav ml-auto nav-flex-icons">
-
         <li class="nav-item dropdown">
           <?php if (isset($_SESSION['login'])) { ?>
             <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
@@ -31,7 +40,7 @@
             <div class="dropdown-menu dropdown-menu-right dropdown-default" aria-labelledby="navbarDropdownMenuLink-333">
               <a class="dropdown-item" href="/sms-project/admin/dashboard.php">Dashboard</a>
               <a class="dropdown-item" href="#">Switch Account</a>
-              <a class="dropdown-item" href="./admin/logout.php">Logout</a>
+              <a class="dropdown-item" href="logout.php">Logout</a>
             </div>
           <?php } else { ?>
             <a href="./login.php" class="nav-link"><i class="fa fa-user mr-2"></i>User login</a>
@@ -41,6 +50,7 @@
     </div>
   </nav>
   <!--/.Navbar -->
+
   <!--Query form-->
   <div class="py-5 shadow" style="background:linear-gradient(-45deg, #3923a7 50%, transparent 50%)">
     <div class="container-fluid my-2">
@@ -73,7 +83,6 @@
                 </div>
                 <!-- Material input -->
                 <div class="md-form">
-                  <!-- <input type="text" id="class" class="form-control"> -->
                   <textarea name="" id="message" class="form-control md-textarea" rows="3"></textarea>
                   <label for="message">Your Query</label>
                 </div>
@@ -110,7 +119,6 @@
     </div>
   </section>
 
-
   <!-- Our Courses -->
   <section class="py-5 bg-light">
     <div class="text-center mb-5">
@@ -121,22 +129,31 @@
     <div class="container">
       <div class="row">
 
-        <?php for ($i = 0; $i < 12; $i++) { ?>
-          <div class="col-lg-3 mb-4">
-            <div class="card">
-              <div>
-                <img src="./assets/images/placeholder.jpg" alt="" class="img-fluid rounded-top course-image">
-              </div>
-              <div class="card-body">
-                <p class="card-text">
-                  <b>Duration: </b> 2 years <br>
-                  <b>Price: </b> 10000/- Rs
-                </p>
-                <button class="btn btn-block btn-primary btn-sm">Enroll Now</button>
+        <?php if ($result_courses->num_rows > 0) {
+          // Output data of each row
+          while ($row = $result_courses->fetch_assoc()) { ?>
+            <div class="col-lg-3 mb-4">
+              <div class="card">
+                <div>
+                  <img src="./<?php echo $row['course_image']; ?>"
+                    alt="<?php echo htmlspecialchars($row['course_name']); ?>"
+                    style="width: 100%; height: 200px; object-fit: cover;" class="img-fluid rounded-top">
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title"><?php echo htmlspecialchars($row['course_name']); ?></h5>
+                  <p class="card-text">
+                    <b>Duration: </b> <?php echo htmlspecialchars($row['duration']); ?> <br>
+                    <b>Price: </b> ₹<?php echo number_format($row['price'], 2); ?>
+                  </p>
+                  <button class="btn btn-block btn-primary btn-sm">Enroll Now</button>
+                </div>
               </div>
             </div>
-          </div>
-        <?php } ?>
+          <?php }
+        } else {
+          echo "<p class='text-center'>No courses available at the moment.</p>";
+        }
+        ?>
       </div>
     </div>
   </section>
@@ -150,28 +167,38 @@
 
     <div class="container">
       <div class="row">
-        <?php for ($i = 0; $i < 6; $i++) { ?>
-          <div class="col-lg-4 my-5">
-            <div class="card">
-              <div class="col-5 position-absolute" style="top:-50px">
-                <img src="./assets/images/placeholder.jpg" alt="" class="mw-100 border rounded-circle">
-              </div>
-              <div class="card-body pt-5 mt-4">
-                <h5 class="card-title mb-0">Teacher's Name</h5>
-                <p><i class="fa fa-star text-warning"></i> <i class="fa fa-star text-warning"></i> <i
-                    class="fa fa-star text-warning"></i> <i class="fa fa-star text-warning"></i> <i
-                    class="fa fa-star text-warning"></i></p>
-                <p class="card-text">
-                  <b>Courses: </b> 5 <br>
-                  <b>Ratings: </b>
-                </p>
+        <?php
+        if ($result_teachers->num_rows > 0) {
+          // Output data of each row
+          while ($row = $result_teachers->fetch_assoc()) { ?>
+            <div class="col-lg-4 my-5 ">
+              <div class="card">
+                <div class="position-relative">
+                  <img src="./<?php echo $row['teacher_image']; ?>"
+                    alt="<?php echo htmlspecialchars($row['teacher_name']); ?>"
+                    class="mw-100 border rounded-circle position-absolute"
+                    style="top:-50px; width: 120px; height: 120px; object-fit: cover;">
+                </div>
+                <div class="card-body pt-5 mt-4">
+                  <h5 class="card-title mb-0"><?php echo htmlspecialchars($row['teacher_name']); ?></h5>
+                  <p>
+                    <i class="fa fa-star text-warning"></i> <?php echo htmlspecialchars($row['ratings']); ?> / 5
+                  </p>
+                  <p class="card-text">
+                    <b>About Teacher: </b> <?php echo htmlspecialchars($row['teacher_description']); ?>
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        <?php } ?>
+          <?php }
+        } else {
+          echo "<p class='text-center'>No teachers available at the moment.</p>";
+        }
+        ?>
       </div>
     </div>
   </section>
+
 
   <!-- Acheivements -->
   <section class="py-5 text-white" style="background:#3923a7">
@@ -278,4 +305,12 @@
       </div>
     </div>
   </section>
-  <?php include('footer.php') ?>
+
+  <?php include('includes/footer.php'); ?>
+</body>
+
+</html>
+
+<?php
+$conn->close();
+?>

@@ -1,16 +1,9 @@
 <?php
-// Database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "user_auth";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
+$pageTitle = "Login Page";
+include('includes/header.php');
+include('includes/config.php');
+?>
+<?php
 // Initialize error messages
 $emailError = $passwordError = $generalError = "";
 
@@ -64,12 +57,63 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-<?php
-$pageTitle = "Login Page";
-$pageCss = '<link href="./style.css" rel="stylesheet">';
-$pageJs = '<script src="./script.js" type="text/javascript"></script>';
-include 'header.php';
-?>
+<style>
+    body,
+    html {
+        height: 100%;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f8f9fa;
+    }
+
+    .form-container {
+        width: 100%;
+        max-width: 600px;
+        padding: 30px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+
+    /* Container for password input and icon */
+    .password-container {
+        position: relative;
+        width: 100%;
+    }
+
+    /* Style the password input */
+    .password-container input {
+        width: 100%;
+        padding-right: 45px;
+        /* Space for the eye icon */
+        box-sizing: border-box;
+        /* Ensure padding doesn't break the layout */
+    }
+
+    /* Style the eye icon */
+    .password-container .password-toggle {
+        position: absolute;
+        right: 10px;
+        /* Adjust to place it inside the input field */
+        top: 50%;
+        transform: translateY(-50%);
+        /* Center vertically */
+        cursor: pointer;
+        color: #888;
+        /* Adjust color */
+        font-size: 1.2em;
+        /* Adjust size */
+    }
+
+    /* Make sure the form fields maintain consistent padding */
+    .password-container input:focus {
+        outline: none;
+        border-color: #007bff;
+    }
+</style>
 
 <body>
     <form method="post" action="">
@@ -98,78 +142,66 @@ include 'header.php';
                 </div>
             </div>
 
-            <!-- Pills content -->
-            <div class="tab-content">
-                <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
-                    <div class="text-center mb-3">
-                        <p>Sign in with:</p>
-                        <button type="button" class="btn btn-link btn-floating mx-1">
-                            <i class="fab fa-facebook-f"></i>
-                        </button>
-                        <button type="button" class="btn btn-link btn-floating mx-1">
-                            <i class="fab fa-google"></i>
-                        </button>
-                        <button type="button" class="btn btn-link btn-floating mx-1">
-                            <i class="fab fa-twitter"></i>
-                        </button>
-                        <button type="button" class="btn btn-link btn-floating mx-1">
-                            <i class="fab fa-github"></i>
-                        </button>
-                    </div>
+            <!-- Email input -->
+            <div class="form-outline mb-4">
+                <label class="form-label" for="loginEmail">Email</label>
+                <input type="email" id="loginEmail" name="email" class="form-control"
+                    value="<?php echo htmlspecialchars($_POST['email'] ?? '', ENT_QUOTES); ?>" required />
+                <?php if ($emailError): ?>
+                    <div class="text-danger"><?php echo htmlspecialchars($emailError); ?></div>
+                <?php endif; ?>
+            </div>
 
-                    <p class="text-center">or:</p>
-
-                    <!-- Email input -->
-                    <div class="form-outline mb-4">
-                        <label class="form-label" for="loginEmail">Email</label>
-                        <input type="email" id="loginEmail" name="email" class="form-control"
-                            value="<?php echo htmlspecialchars($_POST['email'] ?? '', ENT_QUOTES); ?>" required />
-                        <?php if ($emailError): ?>
-                            <div class="text-danger"><?php echo htmlspecialchars($emailError); ?></div>
-                        <?php endif; ?>
-                    </div>
-
-                    <!-- Password input -->
-                    <div class="form-outline mb-4">
-                        <label class="form-label" for="loginPassword">Password</label>
-                        <!-- Password input with icon inside -->
-                        <div class="password-container">
-                            <input type="password" id="loginPassword" name="password" class="form-control" required>
-                            <i class="fas fa-eye password-toggle" id="togglePassword"></i>
-                        </div>
-
-                        <?php if ($passwordError): ?>
-                            <div class="text-danger"><?php echo htmlspecialchars($passwordError); ?></div>
-                        <?php endif; ?>
-                    </div>
-
-                    <!-- 2 column grid layout -->
-                    <div class="row mb-4">
-                        <div class="col-md-6 d-flex justify-content-center">
-                            <!-- Checkbox -->
-                            <div class="form-check mb-3 mb-md-0">
-                                <input class="form-check-input" type="checkbox" value="" id="loginCheck" />
-                                <label class="form-check-label" for="loginCheck"> Remember me </label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 d-flex justify-content-center">
-                            <!-- Simple link -->
-                            <a href="./forgetpass.html">Forgot password?</a>
-                        </div>
-                    </div>
-
-                    <!-- Submit button -->
-                    <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
-
-                    <!-- Register buttons -->
-                    <div class="text-center">
-                        <p>Not a member? <a href="./register.php">Register</a></p>
-                    </div>
+            <!-- Password input -->
+            <div class="form-outline mb-4">
+                <label class="form-label" for="loginPassword">Password</label>
+                <!-- Password input with icon inside -->
+                <div class="password-container">
+                    <input type="password" id="loginPassword" name="password" class="form-control" required>
+                    <i class="fas fa-eye password-toggle" id="togglePassword"></i>
                 </div>
+
+                <?php if ($passwordError): ?>
+                    <div class="text-danger"><?php echo htmlspecialchars($passwordError); ?></div>
+                <?php endif; ?>
+            </div>
+
+
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
+
+            <!-- Register buttons -->
+            <div class="text-center">
+                <p>Not a member? <a href="./register.php">Register</a></p>
             </div>
         </div>
+        </div>
+        </div>
     </form>
+
+    <!-- JavaScript for toggling the password visibility -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get the password fields and their respective toggle icons
+            const loginPasswordField = document.getElementById('loginPassword');
+            const toggleLoginPasswordIcon = document.getElementById('togglePassword');
+            // Add event listener for the login password toggle
+            if (toggleLoginPasswordIcon) {
+                toggleLoginPasswordIcon.addEventListener('click', function () {
+                    if (loginPasswordField.type === 'password') {
+                        loginPasswordField.type = 'text';
+                        toggleLoginPasswordIcon.classList.remove('fa-eye');
+                        toggleLoginPasswordIcon.classList.add('fa-eye-slash');
+                    } else {
+                        loginPasswordField.type = 'password';
+                        toggleLoginPasswordIcon.classList.remove('fa-eye-slash');
+                        toggleLoginPasswordIcon.classList.add('fa-eye');
+                    }
+                });
+            }
+        });
+
+    </script>
 </body>
 
 </html>

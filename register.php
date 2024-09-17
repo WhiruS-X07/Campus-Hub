@@ -1,15 +1,9 @@
 <?php
-// Database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "user_auth";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+$pageTitle = "Register Page";
+include('includes/header.php');
+include('includes/config.php');
+?>
+<?php
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['username']) && isset($_POST['email']) && isset($_POST['password']) && isset($_POST['repeat_password']) && isset($_POST['name'])) {
@@ -27,9 +21,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
             // Insert the user into the database
-            $sql = "INSERT INTO users (name, username, email, password) VALUES (?, ?, ?, ?)";
+            $sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("ssss", $name, $username, $email, $hashed_password);
+            $stmt->bind_param("sss", $username, $email, $hashed_password);
+
 
             if ($stmt->execute()) {
                 // Registration successful
@@ -50,13 +45,63 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
+<style>
+    body,
+    html {
+        height: 100%;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f8f9fa;
+    }
 
-<?php
-$pageTitle = "Register Page";
-$pageCss = '<link href="./style.css" rel="stylesheet">';
-$pageJs = '<script src="./repeat.js" type="text/javascript"></script>';
-include 'header.php';
-?>
+    .form-container {
+        width: 100%;
+        max-width: 600px;
+        padding: 30px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+
+    /* Container for password input and icon */
+    .password-container {
+        position: relative;
+        width: 100%;
+    }
+
+    /* Style the password input */
+    .password-container input {
+        width: 100%;
+        padding-right: 45px;
+        /* Space for the eye icon */
+        box-sizing: border-box;
+        /* Ensure padding doesn't break the layout */
+    }
+
+    /* Style the eye icon */
+    .password-container .password-toggle {
+        position: absolute;
+        right: 10px;
+        /* Adjust to place it inside the input field */
+        top: 50%;
+        transform: translateY(-50%);
+        /* Center vertically */
+        cursor: pointer;
+        color: #888;
+        /* Adjust color */
+        font-size: 1.2em;
+        /* Adjust size */
+    }
+
+    /* Make sure the form fields maintain consistent padding */
+    .password-container input:focus {
+        outline: none;
+        border-color: #007bff;
+    }
+</style>
 
 <form method="post" action="">
     <!-- Centered Form in a Box -->
@@ -130,6 +175,30 @@ include 'header.php';
         <button type="submit" data-mdb-button-init data-mdb-ripple-init
             class="btn btn-primary btn-block mb-3">Register</button>
 </form>
+
+<!-- JavaScript for toggling the password visibility -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const repeatPasswordField = document.getElementById('registerRepeatPassword');
+        const toggleRepeatPasswordIcon = document.getElementById('toggleRepeatPassword');
+
+        // Add event listener for the repeat password toggle
+        if (toggleRepeatPasswordIcon) {
+            toggleRepeatPasswordIcon.addEventListener('click', function () {
+                if (repeatPasswordField.type === 'password') {
+                    repeatPasswordField.type = 'text';
+                    toggleRepeatPasswordIcon.classList.remove('fa-eye');
+                    toggleRepeatPasswordIcon.classList.add('fa-eye-slash');
+                } else {
+                    repeatPasswordField.type = 'password';
+                    toggleRepeatPasswordIcon.classList.remove('fa-eye-slash');
+                    toggleRepeatPasswordIcon.classList.add('fa-eye');
+                }
+            });
+        }
+    });
+</script>
+
 </body>
 
 </html>
