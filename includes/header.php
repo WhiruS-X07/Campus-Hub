@@ -43,4 +43,8 @@ if (isset($pageJs)) {
   <script type="text/javascript" src="./cdns/js/md.js"></script>
   <!-- Additional JS -->
   <?php echo $additionalJs; ?>
+
+
+
+  <link rel="shortcut icon" href="admin/assets/images/favicon.png" />
 </head>

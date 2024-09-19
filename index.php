@@ -6,13 +6,13 @@ $sql_courses = "SELECT * FROM courses";
 $result_courses = $conn->query($sql_courses);
 
 // Query to fetch teachers
-$sql_teachers = "SELECT * FROM teachers";
+$sql_teachers = "SELECT * FROM teacher_info";
 $result_teachers = $conn->query($sql_teachers);
-?>
 
+?>
 <body>
   <!--Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #34abeb;">
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #248AFD;">
     <div class="collapse navbar-collapse" id="navbarSupportedContent-333">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
@@ -38,9 +38,8 @@ $result_teachers = $conn->query($sql_teachers);
               <i class="fas fa-user mr-2"></i>Account
             </a>
             <div class="dropdown-menu dropdown-menu-right dropdown-default" aria-labelledby="navbarDropdownMenuLink-333">
-              <a class="dropdown-item" href="/sms-project/admin/dashboard.php">Dashboard</a>
-              <a class="dropdown-item" href="#">Switch Account</a>
-              <a class="dropdown-item" href="logout.php">Logout</a>
+              <a class="dropdown-item" href="./admin/dashboard.php">Dashboard</a>
+              <a class="dropdown-item" href="./logout.php">Logout</a>
             </div>
           <?php } else { ?>
             <a href="./login.php" class="nav-link"><i class="fa fa-user mr-2"></i>User login</a>
@@ -52,7 +51,7 @@ $result_teachers = $conn->query($sql_teachers);
   <!--/.Navbar -->
 
   <!--Query form-->
-  <div class="py-5 shadow" style="background:linear-gradient(-45deg, #3923a7 50%, transparent 50%)">
+  <div class="py-5 shadow" style="background:linear-gradient(-45deg, #5E50F9 50%, transparent 50%)">
     <div class="container-fluid my-2">
       <div class="row">
         <div class="col-lg-6 my-auto">
@@ -201,7 +200,7 @@ $result_teachers = $conn->query($sql_teachers);
 
 
   <!-- Acheivements -->
-  <section class="py-5 text-white" style="background:#3923a7">
+  <section class="py-5 text-white" style="background:#5E50F9">
     <div>
       <div class="container">
         <div class="row">

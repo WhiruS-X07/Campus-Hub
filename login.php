@@ -36,8 +36,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     $_SESSION['login'] = true;  // or set with user ID if you want
 
-                    // Redirect to index.php
-                    header("Location: ./index.php");
+                    
+                    header("Location: ./admin/dashboard.php");
                     exit();
                 } else {
                     $passwordError = "Incorrect password!";
