@@ -1,17 +1,33 @@
 <?php include('includes/header.php') ?>
 <?php include('includes/config.php') ?>
 <?php
-// Query to fetch courses
 $sql_courses = "SELECT * FROM courses";
 $result_courses = $conn->query($sql_courses);
 
-// Query to fetch teachers
 $sql_teachers = "SELECT * FROM teacher_info";
 $result_teachers = $conn->query($sql_teachers);
 
+if (!isset($_SESSION['login']) || $_SESSION['login'] === true) {
+  if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+
+    $sql = "SELECT user_type FROM users WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+      $user = $result->fetch_assoc();
+      $user_type = $user["user_type"];
+    }
+    $stmt->close();
+    $conn->close();
+  }
+}
 ?>
+
 <body>
-  <!--Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #248AFD;">
     <div class="collapse navbar-collapse" id="navbarSupportedContent-333">
       <ul class="navbar-nav mr-auto">
@@ -38,9 +54,15 @@ $result_teachers = $conn->query($sql_teachers);
               <i class="fas fa-user mr-2"></i>Account
             </a>
             <div class="dropdown-menu dropdown-menu-right dropdown-default" aria-labelledby="navbarDropdownMenuLink-333">
-              <a class="dropdown-item" href="./admin/dashboard.php">Dashboard</a>
+              <?php if ($user_type === 'teacher') { ?>
+                <a class="dropdown-item" href="admin/dashboard.php">Dashboard</a>
+              <?php } elseif ($user_type === 'student') { ?>
+                <a class="dropdown-item" href="student/dashboard.php">Dashboard</a>
+              <?php }
+              ?>
               <a class="dropdown-item" href="./logout.php">Logout</a>
             </div>
+
           <?php } else { ?>
             <a href="./login.php" class="nav-link"><i class="fa fa-user mr-2"></i>User login</a>
           <?php } ?>
@@ -48,9 +70,6 @@ $result_teachers = $conn->query($sql_teachers);
       </ul>
     </div>
   </nav>
-  <!--/.Navbar -->
-
-  <!--Query form-->
   <div class="py-5 shadow" style="background:linear-gradient(-45deg, #5E50F9 50%, transparent 50%)">
     <div class="container-fluid my-2">
       <div class="row">
@@ -65,22 +84,18 @@ $result_teachers = $conn->query($sql_teachers);
             <div class="card-body py-5">
               <h3>Inquiry Form</h3>
               <form action="" method="post" class="">
-                <!-- Material input -->
                 <div class="md-form">
                   <input type="text" id="form1" class="form-control">
                   <label for="form1">Your Name</label>
                 </div>
-                <!-- Material input -->
                 <div class="md-form">
                   <input type="email" id="email" class="form-control">
                   <label for="email">Your Email</label>
                 </div>
-                <!-- Material input -->
                 <div class="md-form">
                   <input type="text" id="mobile" class="form-control">
                   <label for="mobile">Your Mobile</label>
                 </div>
-                <!-- Material input -->
                 <div class="md-form">
                   <textarea name="" id="message" class="form-control md-textarea" rows="3"></textarea>
                   <label for="message">Your Query</label>
@@ -94,9 +109,6 @@ $result_teachers = $conn->query($sql_teachers);
       </div>
     </div>
   </div>
-  <!--/Query form-->
-
-  <!-- About us -->
   <section style="text-align: center; padding: 5rem 0;">
     <div class="container">
       <div class="row justify-content-center">
@@ -117,8 +129,6 @@ $result_teachers = $conn->query($sql_teachers);
       </div>
     </div>
   </section>
-
-  <!-- Our Courses -->
   <section class="py-5 bg-light">
     <div class="text-center mb-5">
       <h2 class="font-weight-bold">Our Courses</h2>
@@ -129,7 +139,6 @@ $result_teachers = $conn->query($sql_teachers);
       <div class="row">
 
         <?php if ($result_courses->num_rows > 0) {
-          // Output data of each row
           while ($row = $result_courses->fetch_assoc()) { ?>
             <div class="col-lg-3 mb-4">
               <div class="card">
@@ -156,8 +165,6 @@ $result_teachers = $conn->query($sql_teachers);
       </div>
     </div>
   </section>
-
-  <!-- Teachers -->
   <section class="py-5">
     <div class="text-center mb-5">
       <h2 class="font-weight-bold">Our Teachers</h2>
@@ -168,7 +175,6 @@ $result_teachers = $conn->query($sql_teachers);
       <div class="row">
         <?php
         if ($result_teachers->num_rows > 0) {
-          // Output data of each row
           while ($row = $result_teachers->fetch_assoc()) { ?>
             <div class="col-lg-4 my-5 ">
               <div class="card">
@@ -197,9 +203,6 @@ $result_teachers = $conn->query($sql_teachers);
       </div>
     </div>
   </section>
-
-
-  <!-- Acheivements -->
   <section class="py-5 text-white" style="background:#5E50F9">
     <div>
       <div class="container">
@@ -259,9 +262,6 @@ $result_teachers = $conn->query($sql_teachers);
       </div>
     </div>
   </section>
-
-
-  <!-- Testimonials -->
   <section class="py-5">
     <div class="text-center mb-5">
       <h2 class="font-weight-bold">What People Say</h2>

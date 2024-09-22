@@ -29,15 +29,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($result->num_rows > 0) {
                 $row = $result->fetch_assoc();
                 if (password_verify($password, $row['password'])) {
-                    // Start session and set session variables
+
                     session_start();
                     $_SESSION['user_id'] = $row['id'];
-                    $_SESSION['user_name'] = $row['username']; // assuming you have a username column
-
-                    $_SESSION['login'] = true;  // or set with user ID if you want
+                    $_SESSION['user_name'] = $row['name'];
+                    $_SESSION['login'] = true;
 
                     
-                    header("Location: ./admin/dashboard.php");
+                    if ($row['user_type'] === 'teacher') {
+                        header("Location: ./admin/dashboard.php");
+                    } elseif ($row['user_type'] === 'student') {
+                        header("Location: ./student/dashboard.php");
+                    } else {
+                        $generalError = "Invalid user type.";
+                    }
                     exit();
                 } else {
                     $passwordError = "Incorrect password!";
@@ -56,6 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn->close();
 }
 ?>
+
 
 <style>
     body,
