@@ -161,7 +161,7 @@ include("sidebar.php");
                                         <thead class="thead-light">
                                             <tr>
                                                 <th>Subject</th>
-                                                <th>Class</th>
+                                                <th>Course</th>
                                                 <th>Section</th>
                                                 <th>Time</th>
                                                 <th>Date</th>
@@ -170,14 +170,12 @@ include("sidebar.php");
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>English</td>
-                                                <td>5</td>
-                                                <td>B</td>
-                                                <td>10.00am</td>
+                                                <td>Biology</td>
+                                                <td>B.Sc</td>
+                                                <td>A</td>
+                                                <td>02.00pm</td>
                                                 <td>25/09/2024</td>
                                                 <td class="text-right">
-                                                    <a href="#" class="btn btn-primary btn-sm mb-1"><i
-                                                            class="far fa-edit"></i></a>
                                                     <button type="button" data-toggle="modal" data-target="#delete_exam"
                                                         class="btn btn-danger btn-sm mb-1"><i
                                                             class="far fa-trash-alt"></i></button>
@@ -185,27 +183,23 @@ include("sidebar.php");
                                             </tr>
                                             <tr>
                                                 <td>Mathematics</td>
-                                                <td>4</td>
+                                                <td>MCA</td>
                                                 <td>A</td>
                                                 <td>11.00am</td>
                                                 <td>26/09/2024</td>
                                                 <td class="text-right">
-                                                    <a href="#" class="btn btn-primary btn-sm mb-1"><i
-                                                            class="far fa-edit"></i></a>
                                                     <button type="button" data-toggle="modal" data-target="#delete_exam"
                                                         class="btn btn-danger btn-sm mb-1"><i
                                                             class="far fa-trash-alt"></i></button>
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td>Science</td>
-                                                <td>4</td>
+                                                <td>Physics</td>
+                                                <td>B.Sc</td>
                                                 <td>B</td>
                                                 <td>01.00pm</td>
                                                 <td>27/09/2024</td>
                                                 <td class="text-right">
-                                                    <a href="#" class="btn btn-primary btn-sm mb-1"><i
-                                                            class="far fa-edit"></i></a>
                                                     <button type="button" data-toggle="modal" data-target="#delete_exam"
                                                         class="btn btn-danger btn-sm mb-1"><i
                                                             class="far fa-trash-alt"></i></button>
@@ -213,34 +207,30 @@ include("sidebar.php");
                                             </tr>
                                             <tr>
                                                 <td>History</td>
-                                                <td>5</td>
+                                                <td>BBA</td>
                                                 <td>C</td>
                                                 <td>09.00am</td>
                                                 <td>28/09/2024</td>
                                                 <td class="text-right">
-                                                    <a href="#" class="btn btn-primary btn-sm mb-1"><i
-                                                            class="far fa-edit"></i></a>
                                                     <button type="button" data-toggle="modal" data-target="#delete_exam"
                                                         class="btn btn-danger btn-sm mb-1"><i
                                                             class="far fa-trash-alt"></i></button>
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <td>Geography</td>
-                                                <td>5</td>
-                                                <td>D</td>
-                                                <td>03.00pm</td>
-                                                <td>29/09/2024</td>
-                                                <td class="text-right">
-                                                    <a href="#" class="btn btn-primary btn-sm mb-1"><i
-                                                            class="far fa-edit"></i></a>
-                                                    <button type="button" data-toggle="modal" data-target="#delete_exam"
-                                                        class="btn btn-danger btn-sm mb-1"><i
-                                                            class="far fa-trash-alt"></i></button>
-                                                </td>
+                                            <td>Geography</td>
+                                            <td>BBA</td>
+                                            <td>D</td>
+                                            <td>03.00pm</td>
+                                            <td>29/09/2024</td>
+                                            <td class="text-right">
+                                                <button type="button" data-toggle="modal" data-target="#delete_exam"
+                                                    class="btn btn-danger btn-sm mb-1"><i
+                                                        class="far fa-trash-alt"></i></button>
+                                            </td>
                                             </tr>
                                         </tbody>
                                     </table>
+
 
                                 </div>
                             </div>

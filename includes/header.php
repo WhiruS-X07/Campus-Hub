@@ -46,5 +46,5 @@ if (isset($pageJs)) {
 
 
 
-  <link rel="shortcut icon" href="admin/assets/images/favicon.png" />
+  <link rel="shortcut icon" href="teacher/assets/images/favicon.png" />
 </head>

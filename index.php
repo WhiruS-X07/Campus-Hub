@@ -26,26 +26,32 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] === true) {
   }
 }
 ?>
+<style>
+  html {
+    scroll-behavior: smooth;
+  }
+</style>
 
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #248AFD;">
     <div class="collapse navbar-collapse" id="navbarSupportedContent-333">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="#"><B>Home</B>
+          <a class="nav-link" href="#"><i class="fas fa-home"></i> <b>Home</b>
             <span class="sr-only">(current)</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#"><b>About Us</b></a>
+          <a class="nav-link" href="#about-us"><i class="fas fa-info-circle"></i> <b>About Us</b></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#"><b>Courses</b></a>
+          <a class="nav-link" href="#courses"><i class="fas fa-book"></i> <b>Courses</b></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#"><b>Events</b></a>
+          <a class="nav-link" href="#acheivements"><i class="fas fa-trophy"></i> <b>Achievements</b></a>
         </li>
       </ul>
+
       <ul class="navbar-nav ml-auto nav-flex-icons">
         <li class="nav-item dropdown">
           <?php if (isset($_SESSION['login'])) { ?>
@@ -55,7 +61,7 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] === true) {
             </a>
             <div class="dropdown-menu dropdown-menu-right dropdown-default" aria-labelledby="navbarDropdownMenuLink-333">
               <?php if ($user_type === 'teacher') { ?>
-                <a class="dropdown-item" href="admin/dashboard.php">Dashboard</a>
+                <a class="dropdown-item" href="teacher/dashboard.php">Dashboard</a>
               <?php } elseif ($user_type === 'student') { ?>
                 <a class="dropdown-item" href="student/dashboard.php">Dashboard</a>
               <?php }
@@ -109,7 +115,7 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] === true) {
       </div>
     </div>
   </div>
-  <section style="text-align: center; padding: 5rem 0;">
+  <section id="about-us" style="text-align: center; padding: 5rem 0;">
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-lg-8" style="padding: 2.5rem 0;">
@@ -124,12 +130,12 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] === true) {
               our educational institution by simplifying operations and fostering a productive environment
             </p>
           </div>
-          <a href="about-us.php" class="btn btn-secondary">Know More</a>
+          <a href="#" class="btn btn-secondary">Know More</a>
         </div>
       </div>
     </div>
   </section>
-  <section class="py-5 bg-light">
+  <section id="courses" class="py-5 bg-light">
     <div class="text-center mb-5">
       <h2 class="font-weight-bold">Our Courses</h2>
       <p class="text-muted">Explore a wide range of courses designed to inspire and empower every student.</p>
@@ -165,7 +171,7 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] === true) {
       </div>
     </div>
   </section>
-  <section class="py-5">
+  <section id="teachers" class="py-5">
     <div class="text-center mb-5">
       <h2 class="font-weight-bold">Our Teachers</h2>
       <p class="text-muted">Meet our dedicated educators who inspire and support every student</p>
@@ -203,57 +209,64 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] === true) {
       </div>
     </div>
   </section>
-  <section class="py-5 text-white" style="background:#5E50F9">
-    <div>
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-6 pr-5">
-            <h2>Acheivements</h2>
-            <p>Celebrating the success of our students who continuously strive for excellence and make us proud with
-              their accomplishments.</p>
+  <section id="acheivements" class="py-5 text-white" style="background:#5E50F9">
+    <div class="container">
+      <div class="text-center">
+        <div class="d-flex justify-content-center align-items-center">
+          <i class="fas fa-trophy" style="color: gold; font-size: 2rem; margin-right: 0.5rem;"></i>
+          <h2 style="margin: 0;">Achievements</h2>
+        </div>
+        <p>Celebrating the success of our students who continuously strive for excellence and make us proud
+          with their accomplishments.</p>
+      </div>
 
-            <img src="./assets/images/still-life-851328_1280.jpg" alt="" class="img-fluid rounded">
-          </div>
-          <div class="col-lg-6 my-auto">
-            <div class="row">
-              <div class="col-lg-6 mb-4">
-                <div class="border rounded">
-                  <div class="card-body text-center">
-                    <span><i class=" text-warning fas fa-graduation-cap fa-2x"></i></span>
-                    <h2 class="my-2 font-weight-bold h1">334</h2>
-                    <hr class="border-warning">
-                    <h4>Graduates</h4>
-                  </div>
+      <div class="row">
+        <div class="col-lg-6">
+          <img src="./assets/images/ache.png" alt="" class="img-fluid rounded">
+        </div>
+
+        <div class="col-lg-6 my-auto">
+          <div class="row">
+            <div class="col-lg-6 mb-4">
+              <div class="border rounded">
+                <div class="card-body text-center">
+                  <span><i class="text-warning fas fa-graduation-cap fa-2x"></i></span>
+                  <h2 class="my-2 font-weight-bold h1">334</h2>
+                  <hr class="border-warning">
+                  <h4>Graduates</h4>
                 </div>
               </div>
-              <div class="col-lg-6 mb-4">
-                <div class="border rounded">
-                  <div class="card-body text-center">
-                    <span><i class="text-primary fas fa-trophy fa-2x"></i></span>
-                    <h2 class="my-2 font-weight-bold h1">286</h2>
-                    <hr class="border-warning">
-                    <h4>Top Performers</h4>
-                  </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+              <div class="border rounded">
+                <div class="card-body text-center">
+                  <span><i class="text-primary fas fa-trophy fa-2x"></i></span>
+                  <h2 class="my-2 font-weight-bold h1">286</h2>
+                  <hr class="border-warning">
+                  <h4>Top Performers</h4>
                 </div>
               </div>
-              <div class="col-lg-6 mb-4">
-                <div class="border rounded">
-                  <div class="card-body text-center">
-                    <span><i class="text-success fas fa-briefcase fa-2x"></i></span>
-                    <h2 class="my-2 font-weight-bold h1">238</h2>
-                    <hr class="border-warning">
-                    <h4>Placements</h4>
-                  </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+              <div class="border rounded">
+                <div class="card-body text-center">
+                  <span><i class="text-success fas fa-briefcase fa-2x"></i></span>
+                  <h2 class="my-2 font-weight-bold h1">238</h2>
+                  <hr class="border-warning">
+                  <h4>Placements</h4>
                 </div>
               </div>
-              <div class="col-lg-6 mb-4">
-                <div class="border rounded">
-                  <div class="card-body text-center">
-                    <span><i class="text-info fas fa-medal fa-2x"></i></span>
-                    <h2 class="my-2 font-weight-bold h1">106</h2>
-                    <hr class="border-warning">
-                    <h4>Scholarships</h4>
-                  </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+              <div class="border rounded">
+                <div class="card-body text-center">
+                  <span><i class="text-info fas fa-medal fa-2x"></i></span>
+                  <h2 class="my-2 font-weight-bold h1">106</h2>
+                  <hr class="border-warning">
+                  <h4>Scholarships</h4>
                 </div>
               </div>
             </div>
@@ -262,6 +275,7 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] === true) {
       </div>
     </div>
   </section>
+
   <section class="py-5">
     <div class="text-center mb-5">
       <h2 class="font-weight-bold">What People Say</h2>
@@ -309,7 +323,3 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] === true) {
 </body>
 
 </html>
-
-<?php
-$conn->close();
-?>

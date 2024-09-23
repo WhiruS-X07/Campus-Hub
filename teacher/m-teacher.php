@@ -22,21 +22,21 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
-    $user = $result->fetch_assoc(); 
-    $user_email = $user["email"]; 
+    $user = $result->fetch_assoc();
+    $user_email = $user["email"];
 } else {
     echo "User not found!";
     exit();
 }
 
-$sql = "SELECT student_name, student_id, email, phone_no, course FROM student WHERE email = ?";
+$sql = "SELECT teacher_name, teacher_id, email, phone_no FROM teacher WHERE email = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $user_email);
 $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
-    $student = $result->fetch_assoc(); 
+    $teacher = $result->fetch_assoc();
 } else {
     echo "User not found!";
     exit();
@@ -50,14 +50,6 @@ ob_end_flush();
 
 <div class="main-panel">
     <div class="content-wrapper">
-        <div class="row">
-            <div class="col-md-12 grid-margin">
-                <h3 class="font-weight-bold">Welcome Back,
-                    <?php echo !empty($student['student_name']) ? htmlspecialchars($student['student_name']) : "Not available"; ?>!
-                </h3>
-            </div>
-        </div>
-
         <div class="row">
             <div class="col-lg-12">
                 <div class="card" style="border-radius: 8px;">
@@ -75,47 +67,21 @@ ob_end_flush();
                             <div class="col-md-3 col-sm-12">
                                 <table class="table table-responsive table-borderless">
                                     <tr>
+                                        <td class="badge badge-pill badge-info"><i class="fas fa-address-card"></i></td>
+                                        <td><strong><?php echo !empty($teacher['teacher_id']) ? htmlspecialchars($teacher['teacher_id']) : "Not available"; ?></strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <td class="badge badge-pill badge-info"><i class="fas fa-phone"></i></td>
-                                        <td><strong><?php echo !empty($student['phone_no']) ? htmlspecialchars($student['phone_no']) : "Not available"; ?></strong>
+                                        <td><strong><?php echo !empty($teacher['phone_no']) ? htmlspecialchars($teacher['phone_no']) : "Not available"; ?></strong>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="badge badge-pill badge-info"><i class="fas fa-envelope"></i></td>
-                                        <td><strong><?php echo !empty($student['email']) ? htmlspecialchars($student['email']) : "Not available"; ?></strong>
+                                        <td><strong><?php echo !empty($teacher['email']) ? htmlspecialchars($teacher['email']) : "Not available"; ?></strong>
                                         </td>
                                     </tr>
                                 </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card " style="border-radius: 8px; margin-top: 20px;">
-                    <div class="card-body">
-                        <h4><strong>Enrolled Courses</strong></h4>
-                    </div>
-                    <hr>
-                    <div class="card-body table-responsive">
-                        <div class="col-lg-4 dashboard-widget">
-                            <div class="card">
-                                <div class="card-body text-uppercase">
-                                    <h5><?php echo !empty($student['course']) ? htmlspecialchars($student['course']) : "Not available"; ?>
-                                    </h5>
-                                </div>
-                                <div class="card-body text-uppercase">
-                                    <div class="row align-items-center">
-                                        <div class="col-md-6">
-                                            <p>Enrolment Number:
-                                                <?php echo !empty($student['student_id']) ? htmlspecialchars($student['student_id']) : "Not available"; ?>
-                                            </p>
-                                        </div>
-                                        <div class="col-md-6 text-md-right">
-                                            <a href="#" class="btn btn-space btn-primary waves-effect waves-light">Click
-                                                here</a>
-                                        </div>
-                                    </div>
-                                </div>
-
                             </div>
                         </div>
                     </div>
@@ -132,22 +98,50 @@ ob_end_flush();
                             <tr>
                                 <th>Full Name</th>
                                 <td colspan="4">
-                                    <?php echo !empty($student['student_name']) ? htmlspecialchars($student['student_name']) : "Not available"; ?>
+                                    <?php echo !empty($teacher['teacher_name']) ? htmlspecialchars($teacher['teacher_name']) : "Not available"; ?>
                                 </td>
                             </tr>
                             <tr>
                                 <th>Date of Birth</th>
                                 <td>Not available</td>
-                                <th>Category</th>
-                                <td>UR</td>
+                                <th>Teacher Id</th>
+                                <td><?php echo !empty($teacher['teacher_id']) ? htmlspecialchars($teacher['teacher_id']) : "Not available"; ?>
+                                </td>
                             </tr>
                             <tr>
                                 <th>Applicant's Email</th>
-                                <td><?php echo !empty($student['email']) ? htmlspecialchars($student['email']) : "Not available"; ?>
+                                <td><?php echo !empty($teacher['email']) ? htmlspecialchars($teacher['email']) : "Not available"; ?>
                                 </td>
                                 <th>Mobile Number</th>
-                                <td><?php echo !empty($student['phone_no']) ? htmlspecialchars($student['phone_no']) : "Not available"; ?>
+                                <td><?php echo !empty($teacher['phone_no']) ? htmlspecialchars($teacher['phone_no']) : "Not available"; ?>
                                 </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card " style="border-radius: 8px; margin-top: 20px;">
+                    <div class="card-body">
+                        <h4><strong>Teaching Details</strong></h4>
+                    </div>
+                    <hr>
+                    <div class="card-body table-responsive">
+                        <table class="table ">
+                            <tr>
+                                <th>B.C.A</th>
+                                <td>Not available<br></td>
+                            </tr>
+                            <tr>
+                                <th>M.C.A</th>
+                                <td>Not available</td>
+                            </tr>
+                            <tr>
+                                <th>B.tech</th>
+                                <td>Not available</td>
+                            </tr>
+                            <tr>
+                                <th>B.Sc (Hons) Mathematics</th>
+                                <td>Not available</td>
                             </tr>
                         </table>
                     </div>
@@ -179,7 +173,6 @@ ob_end_flush();
                         </table>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

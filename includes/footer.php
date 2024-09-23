@@ -7,11 +7,11 @@
             <h5>Useful Links</h5>
 
             <ul class="fa-ul ml-4">
-              <li><a href="" class="text-light"><i class="fa-li fa fa-angle-right"></i>Home</a></li>
-              <li><a href="" class="text-light"><i class="fa-li fa fa-angle-right"></i>About Us</a></li>
-              <li><a href="" class="text-light"><i class="fa-li fa fa-angle-right"></i>Courses</a></li>
-              <li><a href="" class="text-light"><i class="fa-li fa fa-angle-right"></i>Terms & Conditions</a></li>
-              <li><a href="" class="text-light"><i class="fa-li fa fa-angle-right"></i>Privacy Policy</a></li>
+              <li><a href="#" class="text-light"><i class="fa-li fa fa-angle-right"></i>Home</a></li>
+              <li><a href="#about-us" class="text-light"><i class="fa-li fa fa-angle-right"></i>About Us</a></li>
+              <li><a href="#courses" class="text-light"><i class="fa-li fa fa-angle-right"></i>Courses</a></li>
+              <li><a href="#" class="text-light"><i class="fa-li fa fa-angle-right"></i>Terms & Conditions</a></li>
+              <li><a href="#" class="text-light"><i class="fa-li fa fa-angle-right"></i>Privacy Policy</a></li>
             </ul>
           </div>
           <div class="col-lg-4">

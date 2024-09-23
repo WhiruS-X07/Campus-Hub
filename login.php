@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     
                     if ($row['user_type'] === 'teacher') {
-                        header("Location: ./admin/dashboard.php");
+                        header("Location: ./teacher/dashboard.php");
                     } elseif ($row['user_type'] === 'student') {
                         header("Location: ./student/dashboard.php");
                     } else {

@@ -1,8 +1,8 @@
 <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
     <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
-        <a class="navbar-brand brand-logo me-5" href="dashboard.php"><i class="fas fa-user-gear menu-icon"> Admin
-                Panel</i></a>
-        <a class="navbar-brand brand-logo-mini" href="dashboard.php"><i class="fa-solid fa-user-gear"></i></a>
+        <a class="navbar-brand brand-logo me-5" href="dashboard.php"><i class="fas fa-chalkboard-user"></i>
+            T-Panel</i></a>
+        <a class="navbar-brand brand-logo-mini" href="dashboard.php"><i class="fas fa-chalkboard-user"></i></a>
     </div>
     <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
         <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -16,7 +16,7 @@
             </li>
             <li class="nav-item nav-profile ">
                 <a href="../logout.php" class="nav-link" title="Logout">
-                   <i class="fas fa-sign-out-alt"></i>
+                    <i class="fas fa-sign-out-alt"></i>
                 </a>
             </li>
         </ul>
@@ -52,32 +52,17 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#teachers" aria-expanded="false"
-                    aria-controls="teachers">
-                    <i class="fas fa-chalkboard-teacher menu-icon"></i>
-                    <span class="menu-title">Teachers</span>
-                    <i class="menu-arrow"></i>
-                </a>
-                <div class="collapse" id="teachers">
-                    <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"><a class="nav-link" href="pages/teachers/manage.html">Manage Teachers</a>
-                        </li>
-                        <li class="nav-item"><a class="nav-link" href="pages/teachers/add.html">Add Teacher</a></li>
-                    </ul>
-                </div>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="collapse" href="#students" aria-expanded="false"
                     aria-controls="students">
-                    <i class="fas fa-user menu-icon"></i>
+                    <i class="fas fa-user-graduate menu-icon"></i>
                     <span class="menu-title">Students</span>
                     <i class="menu-arrow"></i>
                 </a>
                 <div class="collapse" id="students">
                     <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"> <a class="nav-link" href="pages/students/manage.html">Manage Students</a>
+                        <li class="nav-item"> <a class="nav-link" href="student_info.php">Students Information</a>
                         </li>
-                        <li class="nav-item"> <a class="nav-link" href="pages/students/add.html">Add Student</a></li>
+                        <li class="nav-item"> <a class="nav-link" href="m-student.php">Manage Students</a></li>
                     </ul>
                 </div>
             </li>
@@ -123,7 +108,7 @@
                 </a>
                 <div class="collapse" id="attendance">
                     <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"> <a class="nav-link" href="pages/attendance/manage.html">Attendance</a>
+                        <li class="nav-item"> <a class="nav-link" href="attendance.php">Attendance</a>
                         </li>
                         <li class="nav-item"> <a class="nav-link" href="pages/attendance/manage.html">Leave</a></li>
                     </ul>
@@ -146,10 +131,9 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="pages/study-materials/manage.html" aria-expanded="false"
-                    aria-controls="study-materials">
-                    <i class="fas fa-book menu-icon"></i>
-                    <span class="menu-title">Manage Study Materials</span>
+                <a class="nav-link" href="m-teacher.php" aria-expanded="false" aria-controls="profile-teacher">
+                    <i class="fas fa-user menu-icon"></i>
+                    <span class="menu-title">Teacher Profile</span>
                 </a>
             </li>
         </ul>
