@@ -26,7 +26,6 @@
         </button>
     </div>
 </nav>
-<!-- partial -->
 <div class="container-fluid page-body-wrapper">
     <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
@@ -37,17 +36,17 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#courses" aria-expanded="false"
-                    aria-controls="courses">
+                <a class="nav-link" data-bs-toggle="collapse" href="#course" aria-expanded="false"
+                    aria-controls="course">
                     <i class="fas fa-chalkboard menu-icon"></i>
-                    <span class="menu-title">Courses</span>
+                    <span class="menu-title">About Course</span>
                     <i class="menu-arrow"></i>
                 </a>
-                <div class="collapse" id="courses">
+                <div class="collapse" id="course">
                     <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"> <a class="nav-link" href="pages/courses/manage.html">Manage Courses</a>
+                        <li class="nav-item"> <a class="nav-link" href="course_info.php">Courses Info</a>
                         </li>
-                        <li class="nav-item"> <a class="nav-link" href="pages/courses/add.html">Add Course</a></li>
+                        <li class="nav-item"> <a class="nav-link" href="m-course.php">Add Course</a></li>
                     </ul>
                 </div>
             </li>
@@ -60,9 +59,10 @@
                 </a>
                 <div class="collapse" id="students">
                     <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"> <a class="nav-link" href="student_info.php">Students Information</a>
+                        <li class="nav-item"> <a class="nav-link" href="student_info.php">Students Info</a>
                         </li>
                         <li class="nav-item"> <a class="nav-link" href="m-student.php">Manage Students</a></li>
+                        <li class="nav-item"> <a class="nav-link" href="attendance.php">Manage Attendance</a></li>
                     </ul>
                 </div>
             </li>
@@ -96,21 +96,6 @@
                         <li class="nav-item"> <a class="nav-link" href="pages/exams/form.html">Examination Form</a></li>
                         <li class="nav-item"> <a class="nav-link" href="pages/exams/schedule.html">Exam Schedule</a>
                         </li>
-                    </ul>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#attendance" aria-expanded="false"
-                    aria-controls="attendance">
-                    <i class="fas fa-user-check menu-icon"></i>
-                    <span class="menu-title">Manage Attendance</span>
-                    <i class="menu-arrow"></i>
-                </a>
-                <div class="collapse" id="attendance">
-                    <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"> <a class="nav-link" href="attendance.php">Attendance</a>
-                        </li>
-                        <li class="nav-item"> <a class="nav-link" href="pages/attendance/manage.html">Leave</a></li>
                     </ul>
                 </div>
             </li>
