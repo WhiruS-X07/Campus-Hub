@@ -67,51 +67,17 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#timetable" aria-expanded="false"
-                    aria-controls="timetable">
+                <a class="nav-link" data-bs-toggle="collapse" href="#timetables" aria-expanded="false"
+                    aria-controls="timetables">
                     <i class="fas fa-calendar-alt menu-icon"></i>
                     <span class="menu-title">Timetable</span>
                     <i class="menu-arrow"></i>
                 </a>
-                <div class="collapse" id="timetable">
+                <div class="collapse" id="timetables">
                     <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"> <a class="nav-link" href="pages/timetable/view.html">View Timetable</a>
+                        <li class="nav-item"> <a class="nav-link" href="timetable_info.php">View Timetable</a>
                         </li>
-                        <li class="nav-item"> <a class="nav-link" href="pages/timetable/edit.html">Edit Timetable</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#exams" aria-expanded="false" aria-controls="exams">
-                    <i class="fas fa-clipboard-list menu-icon"></i>
-                    <span class="menu-title">Exam Management</span>
-                    <i class="menu-arrow"></i>
-                </a>
-                <div class="collapse" id="exams">
-                    <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"> <a class="nav-link" href="pages/exams/results.html">Exam Results</a></li>
-                        <li class="nav-item"> <a class="nav-link" href="pages/exams/admit-cards.html">Admit Cards</a>
-                        </li>
-                        <li class="nav-item"> <a class="nav-link" href="pages/exams/form.html">Examination Form</a></li>
-                        <li class="nav-item"> <a class="nav-link" href="pages/exams/schedule.html">Exam Schedule</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#events" aria-expanded="false"
-                    aria-controls="events">
-                    <i class="fas fa-calendar-day menu-icon"></i>
-                    <span class="menu-title">Manage Events</span>
-                    <i class="menu-arrow"></i>
-                </a>
-                <div class="collapse" id="events">
-                    <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"> <a class="nav-link" href="pages/events/manage.html">Webinar/Seminar</a>
-                        </li>
-                        <li class="nav-item"> <a class="nav-link" href="pages/events/manage.html">Campus Functions</a>
-                        </li>
+                        <li class="nav-item"> <a class="nav-link" href="m-timetable.php">Edit Timetable</a></li>
                     </ul>
                 </div>
             </li>

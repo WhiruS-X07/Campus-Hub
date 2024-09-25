@@ -83,38 +83,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-
-    /* Container for password input and icon */
     .password-container {
         position: relative;
         width: 100%;
     }
 
-    /* Style the password input */
     .password-container input {
         width: 100%;
         padding-right: 45px;
-        /* Space for the eye icon */
         box-sizing: border-box;
-        /* Ensure padding doesn't break the layout */
     }
 
-    /* Style the eye icon */
     .password-container .password-toggle {
         position: absolute;
         right: 10px;
-        /* Adjust to place it inside the input field */
         top: 50%;
         transform: translateY(-50%);
-        /* Center vertically */
         cursor: pointer;
         color: #888;
-        /* Adjust color */
         font-size: 1.2em;
-        /* Adjust size */
     }
-
-    /* Make sure the form fields maintain consistent padding */
     .password-container input:focus {
         outline: none;
         border-color: #007bff;
@@ -148,7 +136,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
             </div>
 
-            <!-- Email input -->
             <div class="form-outline mb-4">
                 <label class="form-label" for="loginEmail">Email</label>
                 <input type="email" id="loginEmail" name="email" class="form-control"
@@ -158,25 +145,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <?php endif; ?>
             </div>
 
-            <!-- Password input -->
             <div class="form-outline mb-4">
                 <label class="form-label" for="loginPassword">Password</label>
-                <!-- Password input with icon inside -->
                 <div class="password-container">
                     <input type="password" id="loginPassword" name="password" class="form-control" required>
                     <i class="fas fa-eye password-toggle" id="togglePassword"></i>
                 </div>
-
                 <?php if ($passwordError): ?>
                     <div class="text-danger"><?php echo htmlspecialchars($passwordError); ?></div>
                 <?php endif; ?>
             </div>
 
-
-            <!-- Submit button -->
             <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
 
-            <!-- Register buttons -->
             <div class="text-center">
                 <p>Not a member? <a href="./register.php">Register</a></p>
             </div>
@@ -185,13 +166,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </form>
 
-    <!-- JavaScript for toggling the password visibility -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Get the password fields and their respective toggle icons
             const loginPasswordField = document.getElementById('loginPassword');
             const toggleLoginPasswordIcon = document.getElementById('togglePassword');
-            // Add event listener for the login password toggle
             if (toggleLoginPasswordIcon) {
                 toggleLoginPasswordIcon.addEventListener('click', function () {
                     if (loginPasswordField.type === 'password') {

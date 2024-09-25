@@ -33,13 +33,11 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] === true) {
 </style>
 
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #248AFD;">
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #248AFD;">
     <div class="collapse navbar-collapse" id="navbarSupportedContent-333">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="#"><i class="fas fa-home"></i> <b>Home</b>
-            <span class="sr-only">(current)</span>
-          </a>
+          <a class="nav-link" href="#home"><i class="fas fa-home"></i> <b>Home</b></a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#about-us"><i class="fas fa-info-circle"></i> <b>About Us</b></a>
@@ -76,45 +74,46 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] === true) {
       </ul>
     </div>
   </nav>
-  <div class="py-5 shadow" style="background:linear-gradient(-45deg, #5E50F9 50%, transparent 50%)">
-    <div class="container-fluid my-2">
-      <div class="row">
-        <div class="col-lg-6 my-auto">
-          <h1 class="display-3 font-weight-bold">Addmission Open for 2024-2025</h1>
-          <p class="py-lg-4">Admissions open for 2024-2025! Join us for quality education, dedicated teachers, and a
-            nurturing environment.<br> Apply now to secure future!</p>
-          <a href="" class="btn btn-lg btn-primary">Call to Action</a>
-        </div>
-        <div class="col-lg-6">
-          <div class="col-lg-8 mx-auto card shadow-lg">
-            <div class="card-body py-5">
-              <h3>Inquiry Form</h3>
-              <form action="" method="post" class="">
-                <div class="md-form">
-                  <input type="text" id="form1" class="form-control">
-                  <label for="form1">Your Name</label>
-                </div>
-                <div class="md-form">
-                  <input type="email" id="email" class="form-control">
-                  <label for="email">Your Email</label>
-                </div>
-                <div class="md-form">
-                  <input type="text" id="mobile" class="form-control">
-                  <label for="mobile">Your Mobile</label>
-                </div>
-                <div class="md-form">
-                  <textarea name="" id="message" class="form-control md-textarea" rows="3"></textarea>
-                  <label for="message">Your Query</label>
-                </div>
-
-                <button class="btn btn-primary btn-block">Submit Form</button>
-              </form>
+  <section id="home">
+    <div class="py-5 shadow" style="background:linear-gradient(-45deg, #5E50F9 50%, transparent 50%)">
+      <div class="container-fluid my-2">
+        <div class="row">
+          <div class="col-lg-6 my-auto">
+            <h1 class="display-3 font-weight-bold">Addmission Open for 2024-2025</h1>
+            <p class="py-lg-4">Admissions open for 2024-2025! Join us for quality education, dedicated teachers, and a
+              nurturing environment.<br> Apply now to secure future!</p>
+            <a href="" class="btn btn-lg btn-primary">Call to Action</a>
+          </div>
+          <div class="col-lg-6">
+            <div class="col-lg-8 mx-auto card shadow-lg">
+              <div class="card-body py-5">
+                <h3>Inquiry Form</h3>
+                <form action="" method="post" class="">
+                  <div class="md-form">
+                    <input type="text" id="form1" class="form-control">
+                    <label for="form1">Your Name</label>
+                  </div>
+                  <div class="md-form">
+                    <input type="email" id="email" class="form-control">
+                    <label for="email">Your Email</label>
+                  </div>
+                  <div class="md-form">
+                    <input type="text" id="mobile" class="form-control">
+                    <label for="mobile">Your Mobile</label>
+                  </div>
+                  <div class="md-form">
+                    <textarea name="" id="message" class="form-control md-textarea" rows="3"></textarea>
+                    <label for="message">Your Query</label>
+                  </div>
+                  <button class="btn btn-primary btn-block">Submit Form</button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </section>
   <section id="about-us" style="text-align: center; padding: 5rem 0;">
     <div class="container">
       <div class="row justify-content-center">
@@ -321,5 +320,29 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] === true) {
 
   <?php include('includes/footer.php'); ?>
 </body>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+    window.addEventListener('scroll', function () {
+      let currentSection = '';
+
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 80;
+        const sectionHeight = section.clientHeight;
+        if (pageYOffset >= sectionTop && pageYOffset < sectionTop + sectionHeight) {
+          currentSection = section.getAttribute('id');
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.parentElement.classList.remove('active');
+        if (link.getAttribute('href').includes(currentSection)) {
+          link.parentElement.classList.add('active');
+        }
+      });
+    });
+  });
+</script>
 
 </html>

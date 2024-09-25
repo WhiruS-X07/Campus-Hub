@@ -1,7 +1,7 @@
 <?php
 ob_start();
 session_start();
-include("header.php");
+include("../teacher/header.php");
 include("sidebar.php");
 include('../includes/config.php');
 
@@ -183,5 +183,5 @@ ob_end_flush();
             </div>
         </div>
     </div>
-    <?php include("footer.php"); ?>
+    <?php include("../teacher/footer.php"); ?>
 </div>

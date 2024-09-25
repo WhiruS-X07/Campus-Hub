@@ -4,7 +4,6 @@ include("header.php");
 include("sidebar.php");
 include('../includes/config.php');
 
-// Add or Update Student
 if (isset($_POST['submit'])) {
     $student_img = $_FILES['student_img']['name'];
     $student_name = $_POST['student_name'];
@@ -15,7 +14,6 @@ if (isset($_POST['submit'])) {
     $section = $_POST['section'];
     $semester_year = $_POST['semester_year'];
 
-    // File upload logic
     $target_dir = "./assets/upload/";
     $target_file = $target_dir . basename($student_img);
     $image_path = $target_file;
@@ -23,18 +21,28 @@ if (isset($_POST['submit'])) {
     if (!is_dir($target_dir)) {
         mkdir($target_dir, 0777, true);
     }
-
     if (move_uploaded_file($_FILES['student_img']['tmp_name'], $target_file)) {
-        // If the student_id exists, update the record
-        if (isset($_POST['edit_id'])) {
+
+        if (isset($_POST['edit_id']) && $_POST['edit_id'] != '') {
+            // Update student record
             $edit_id = $_POST['edit_id'];
             $sql = "UPDATE student_info SET student_img='$image_path', student_name='$student_name', email='$email', phone_no='$phone_no', course='$course', section='$section', semester_year='$semester_year' WHERE student_id='$edit_id'";
         } else {
-            // Insert a new record
-            $sql = "INSERT INTO student_info (student_img, student_name, student_id, email, phone_no, course, section, semester_year) 
-            VALUES ('$image_path', '$student_name', '$student_id', '$email', '$phone_no', '$course', '$section', '$semester_year')";
+            // Check for duplicate student_id
+            $check_query = "SELECT * FROM student_info WHERE student_id = '$student_id'";
+            $check_result = mysqli_query($conn, $check_query);
+
+            if (mysqli_num_rows($check_result) > 0) {
+                // If a duplicate exists, show error
+                $error = "A student with this ID already exists. Please use a different ID.";
+            } else {
+                // Insert new student record
+                $sql = "INSERT INTO student_info (student_img, student_name, student_id, email, phone_no, course, section, semester_year) 
+                        VALUES ('$image_path', '$student_name', '$student_id', '$email', '$phone_no', '$course', '$section', '$semester_year')";
+            }
         }
 
+        // Execute SQL query and handle success or error
         if (mysqli_query($conn, $sql)) {
             $msg = "Student information saved successfully!";
         } else {
@@ -45,14 +53,12 @@ if (isset($_POST['submit'])) {
     }
 }
 
-// Search Student
 if (isset($_POST['search'])) {
     $search_query = mysqli_real_escape_string($conn, $_POST['search_query']);
     $sql = "SELECT * FROM student_info WHERE student_name LIKE '%$search_query%' OR student_id LIKE '%$search_query%' OR course LIKE '%$search_query%'";
     $result = mysqli_query($conn, $sql);
 }
 
-// Delete Student
 if (isset($_POST['delete'])) {
     $delete_id = $_POST['delete_id'];
     $sql = "DELETE FROM student_info WHERE student_id='$delete_id'";
@@ -64,7 +70,6 @@ if (isset($_POST['delete'])) {
     }
 }
 
-// Fetch student data for editing
 if (isset($_POST['edit'])) {
     $edit_id = $_POST['edit_id'];
     $edit_sql = "SELECT * FROM student_info WHERE student_id='$edit_id'";
@@ -206,16 +211,14 @@ if (isset($_POST['edit'])) {
                                         <td><?php echo $row['section']; ?></td>
                                         <td><?php echo $row['semester_year']; ?></td>
                                         <td class="text-right">
-                                            <form method="POST" class="d-inline">
+                                            <form method="POST" style="display:inline-block;">
                                                 <input type="hidden" name="edit_id" value="<?php echo $row['student_id']; ?>">
-                                                <button type="submit" name="edit" class="btn btn-warning btn-sm"><i
-                                                        class="far fa-edit"></i></button>
+                                                <button type="submit" name="edit" class="btn btn-info btn-sm">Edit</button>
                                             </form>
-                                            <form method="POST" class="d-inline"
-                                                onsubmit="return confirm('Are you sure you want to delete this student?');">
+                                            <form method="POST" style="display:inline-block;">
                                                 <input type="hidden" name="delete_id" value="<?php echo $row['student_id']; ?>">
-                                                <button type="submit" name="delete" class="btn btn-danger btn-sm"><i
-                                                        class="far fa-trash-alt"></i></button>
+                                                <button type="submit" name="delete"
+                                                    class="btn btn-danger btn-sm">Delete</button>
                                             </form>
                                         </td>
                                     </tr>
@@ -223,12 +226,11 @@ if (isset($_POST['edit'])) {
                             </tbody>
                         </table>
                     <?php elseif (isset($result)): ?>
-                        <div class="alert alert-warning">No results found.</div>
+                        <p>No students found matching your search criteria.</p>
                     <?php endif; ?>
                 </div>
             </div>
         </div>
-
-        <?php include("footer.php"); ?>
     </div>
 </div>
+<?php include("footer.php"); ?>
