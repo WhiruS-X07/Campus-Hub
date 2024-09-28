@@ -5,6 +5,16 @@ include('includes/config.php');
 
 $error_message = "";
 $form_valid = true;
+$courses = [];
+
+$sql_courses = "SELECT course_id FROM course_info";
+$result_courses = $conn->query($sql_courses);
+
+if ($result_courses && $result_courses->num_rows > 0) {
+    while ($row = $result_courses->fetch_assoc()) {
+        $courses[] = $row['course_id'];
+    }
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!empty($_POST['name']) && !empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['user_type'])) {
@@ -28,21 +38,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $user_specific_id = null;
         }
 
-        if ($user_type === 'student' && !empty($student_id)) {
-            $sql_check_student = "SELECT id FROM student WHERE student_id = ?";
-            $stmt_check_student = $conn->prepare($sql_check_student);
-            $stmt_check_student->bind_param("s", $student_id);
-            $stmt_check_student->execute();
-            $stmt_check_student->store_result();
-
-            if ($stmt_check_student->num_rows === 0) {
-                $error_message = "No student found with the given Student ID.";
-                $form_valid = false;
-            }
-
-            $stmt_check_student->close();
-        }
-
         if ($form_valid) {
             $conn->begin_transaction();
 
@@ -59,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $stmt_teacher->execute();
                         $stmt_teacher->close();
                     } elseif ($user_type === 'student' && !empty($student_id)) {
-                        $sql_student = "INSERT INTO student (id, student_name, student_id, email, phone_no, course) VALUES (NULL, ?, ?, ?, ?, ?)";
+                        $sql_student = "INSERT INTO student (id, student_name, student_id, email, phone_no, course_id) VALUES (NULL, ?, ?, ?, ?, ?)";
                         $stmt_student = $conn->prepare($sql_student);
                         $stmt_student->bind_param("sssss", $name, $student_id, $email, $phone_no, $course);
                         $stmt_student->execute();
@@ -103,11 +98,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     .form-container {
         width: 100%;
-        max-width: 330px;
+        max-width: 350px;
         padding: 30px;
         background-color: white;
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin: 0 auto;
     }
 
     .password-container {
@@ -134,12 +130,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     .password-container input:focus {
         outline: none;
         border-color: #007bff;
-    }
-
-    .form-container {
-        width: 100%;
-        max-width: 320px;
-        margin: 0 auto;
     }
 
     .form-outline input,
@@ -217,7 +207,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     <div class="col-md-6">
                         <label class="form-label" for="course">Course</label>
-                        <input type="text" id="course" name="course" class="form-control" />
+                        <select type="text" id="course" name="course" class="form-control" >
+                            <option value="" disabled selected>Select a course</option>
+                            <?php foreach ($courses as $course_id): ?>
+                                <option value="<?php echo $course_id; ?>"><?php echo $course_id; ?></option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                 </div>
             </div>

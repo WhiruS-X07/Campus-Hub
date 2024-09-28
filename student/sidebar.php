@@ -36,79 +36,28 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#courses" aria-expanded="false"
-                    aria-controls="courses">
+                <a class="nav-link" href="e-course.php" aria-expanded="false" aria-controls="courses">
                     <i class="fas fa-chalkboard menu-icon"></i>
                     <span class="menu-title">My Courses</span>
-                    <i class="menu-arrow"></i>
                 </a>
-                <div class="collapse" id="courses">
-                    <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"><a class="nav-link" href="pages/courses/view.html">View Courses</a></li>
-                        <li class="nav-item"><a class="nav-link" href="pages/courses/enroll.html">Enroll in Course</a>
-                        </li>
-                    </ul>
-                </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#timetable" aria-expanded="false"
-                    aria-controls="timetable">
+                <a class="nav-link" href="e-timetable.php" aria-expanded="false" aria-controls="timetable">
                     <i class="fas fa-calendar-alt menu-icon"></i>
                     <span class="menu-title">My Timetable</span>
-                    <i class="menu-arrow"></i>
+
                 </a>
-                <div class="collapse" id="timetable">
-                    <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"><a class="nav-link" href="pages/timetable/view.html">View Timetable</a>
-                        </li>
-                    </ul>
-                </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#exams" aria-expanded="false" aria-controls="exams">
-                    <i class="fas fa-clipboard-list menu-icon"></i>
-                    <span class="menu-title">Exams</span>
-                    <i class="menu-arrow"></i>
+                <a class="nav-link" href="examsub.php" aria-expanded="false" aria-controls="exam">
+                    <i class="fas fa-pencil-alt menu-icon"></i>
+                    <span class="menu-title">Exam Registration</span>
                 </a>
-                <div class="collapse" id="exams">
-                    <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"><a class="nav-link" href="pages/exams/results.html">View Results</a></li>
-                        <li class="nav-item"><a class="nav-link" href="pages/exams/schedule.html">Exam Schedule</a></li>
-                    </ul>
-                </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#attendance" aria-expanded="false"
-                    aria-controls="attendance">
-                    <i class="fas fa-user-check menu-icon"></i>
-                    <span class="menu-title">Attendance</span>
-                    <i class="menu-arrow"></i>
-                </a>
-                <div class="collapse" id="attendance">
-                    <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"><a class="nav-link" href="pages/attendance/view.html">View Attendance</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#events" aria-expanded="false"
-                    aria-controls="events">
-                    <i class="fas fa-calendar-day menu-icon"></i>
-                    <span class="menu-title">Events</span>
-                    <i class="menu-arrow"></i>
-                </a>
-                <div class="collapse" id="events">
-                    <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"><a class="nav-link" href="pages/events/view.html">View Events</a></li>
-                    </ul>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="pages/study-materials/view.html" aria-expanded="false"
-                    aria-controls="study-materials">
-                    <i class="fas fa-book menu-icon"></i>
-                    <span class="menu-title">Study Materials</span>
+                <a class="nav-link" href="profile.php" aria-expanded="false" aria-controls="study-materials">
+                    <i class="fas fa-user menu-icon"></i>
+                    <span class="menu-title">Profile</span>
                 </a>
             </li>
         </ul>
