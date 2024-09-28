@@ -15,7 +15,6 @@ if ($result_courses && $result_courses->num_rows > 0) {
         $courses[] = $row['course_id'];
     }
 }
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!empty($_POST['name']) && !empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['user_type'])) {
 
@@ -30,59 +29,76 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-        if ($user_type === 'teacher' || !empty($teacher_id)) {
-            $user_specific_id = $teacher_id;
-        } elseif ($user_type === 'student' && !empty($student_id)) {
-            $user_specific_id = $student_id;
+        // Check if the email already exists
+        $email_check_sql = "SELECT email FROM users WHERE email = ?";
+        $stmt_email_check = $conn->prepare($email_check_sql);
+        $stmt_email_check->bind_param("s", $email);
+        $stmt_email_check->execute();
+        $stmt_email_check->store_result();
+
+        if ($stmt_email_check->num_rows > 0) {
+            // If email exists, show an error message
+            $error_message = "This email is already registered. Please use a different email or log in.";
+            $form_valid = false;
         } else {
-            $user_specific_id = null;
-        }
+            // Proceed with the rest of the code if the email does not exist
+            $stmt_email_check->close();
 
-        if ($form_valid) {
-            $conn->begin_transaction();
-
-            try {
-                $sql = "INSERT INTO users (name, email, password, user_type, user_specific_id, phone_no, course) VALUES (?, ?, ?, ?, ?, ?, ?)";
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param("sssssss", $name, $email, $hashed_password, $user_type, $user_specific_id, $phone_no, $course);
-
-                if ($stmt->execute()) {
-                    if ($user_type === 'teacher' && !empty($teacher_id)) {
-                        $sql_teacher = "INSERT INTO teacher (id, teacher_name, email, teacher_id, phone_no) VALUES (NULL, ?, ?, ?, ?)";
-                        $stmt_teacher = $conn->prepare($sql_teacher);
-                        $stmt_teacher->bind_param("ssss", $name, $email, $teacher_id, $phone_no);
-                        $stmt_teacher->execute();
-                        $stmt_teacher->close();
-                    } elseif ($user_type === 'student' && !empty($student_id)) {
-                        $sql_student = "INSERT INTO student (id, student_name, student_id, email, phone_no, course_id) VALUES (NULL, ?, ?, ?, ?, ?)";
-                        $stmt_student = $conn->prepare($sql_student);
-                        $stmt_student->bind_param("sssss", $name, $student_id, $email, $phone_no, $course);
-                        $stmt_student->execute();
-                        $stmt_student->close();
-                    }
-
-                    $conn->commit();
-
-                    $_SESSION['registration_success'] = true;
-                    header("Location: ./login.php");
-                    exit();
-                } else {
-                    echo "Error: " . $stmt->error;
-                }
-
-                $stmt->close();
-            } catch (Exception $e) {
-                $conn->rollback();
-                echo "Error: " . $e->getMessage();
+            if ($user_type === 'teacher' || !empty($teacher_id)) {
+                $user_specific_id = $teacher_id;
+            } elseif ($user_type === 'student' && !empty($student_id)) {
+                $user_specific_id = $student_id;
+            } else {
+                $user_specific_id = null;
             }
 
-            $conn->close();
+            if ($form_valid) {
+                $conn->begin_transaction();
+
+                try {
+                    $sql = "INSERT INTO users (name, email, password, user_type, user_specific_id, phone_no, course) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param("sssssss", $name, $email, $hashed_password, $user_type, $user_specific_id, $phone_no, $course);
+
+                    if ($stmt->execute()) {
+                        if ($user_type === 'teacher' && !empty($teacher_id)) {
+                            $sql_teacher = "INSERT INTO teacher (id, teacher_name, email, teacher_id, phone_no) VALUES (NULL, ?, ?, ?, ?)";
+                            $stmt_teacher = $conn->prepare($sql_teacher);
+                            $stmt_teacher->bind_param("ssss", $name, $email, $teacher_id, $phone_no);
+                            $stmt_teacher->execute();
+                            $stmt_teacher->close();
+                        } elseif ($user_type === 'student' && !empty($student_id)) {
+                            $sql_student = "INSERT INTO student (id, student_name, student_id, email, phone_no, course_id) VALUES (NULL, ?, ?, ?, ?, ?)";
+                            $stmt_student = $conn->prepare($sql_student);
+                            $stmt_student->bind_param("sssss", $name, $student_id, $email, $phone_no, $course);
+                            $stmt_student->execute();
+                            $stmt_student->close();
+                        }
+
+                        $conn->commit();
+
+                        $_SESSION['registration_success'] = true;
+                        header("Location: ./login.php");
+                        exit();
+                    } else {
+                        echo "Error: " . $stmt->error;
+                    }
+
+                    $stmt->close();
+                } catch (Exception $e) {
+                    $conn->rollback();
+                    echo "Error: " . $e->getMessage();
+                }
+
+                $conn->close();
+            }
         }
     } else {
         $error_message = "Required fields are missing.";
         $form_valid = false;
     }
 }
+
 ?>
 
 <style>
@@ -104,6 +120,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         margin: 0 auto;
+    }
+
+    .error-message {
+        color: red;
+        font-size: 14px;
+        margin-bottom: 10px;
+        text-align: center;
     }
 
     .password-container {
@@ -146,6 +169,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <form method="post" action="">
         <div class="form-container card " style="padding: 30px;">
+            <?php if (!empty($error_message)): ?>
+                <div class="error-message">
+                    <?php echo $error_message; ?>
+                </div>
+            <?php endif; ?>
             <div style="display:block;">
                 <div style="display: flex;">
                     <div style="margin-left: -50px; cursor: pointer;">
@@ -207,7 +235,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     <div class="col-md-6">
                         <label class="form-label" for="course">Course</label>
-                        <select type="text" id="course" name="course" class="form-control" >
+                        <select type="text" id="course" name="course" class="form-control">
                             <option value="" disabled selected>Select a course</option>
                             <?php foreach ($courses as $course_id): ?>
                                 <option value="<?php echo $course_id; ?>"><?php echo $course_id; ?></option>

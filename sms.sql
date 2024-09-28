@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 26, 2024 at 01:11 PM
+-- Generation Time: Sep 28, 2024 at 04:55 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -553,7 +553,52 @@ INSERT INTO `course_info` (`id`, `course_name`, `course_type`, `duration`, `desc
 (16, 'Master of Arts in Gender and Development Studies', 'DEGREE', '2 Years', 'This programme aims to explore the intersection of gender and development, focusing on policies and practices that promote gender equality.', 12400.00, 'Bachelor’s Degree or a higher degree from a recognized University.', 'Gender & Development Studies', 'MAGD'),
 (17, 'Master of Arts in Philosophy', 'DEGREE', '2 Years', 'The programme aims to provide a deep understanding of philosophical concepts and theories, encouraging critical thinking and analysis.', 14000.00, 'Bachelor’s Degree or a higher degree from a recognized University.', 'Philosophy', 'MAPY'),
 (18, 'Master of Arts in Public Administration', 'DEGREE', '2 Years', 'This programme equips students with the skills and knowledge to manage public administration and governance effectively.', 14000.00, 'Bachelor’s Degree or a higher degree from a recognized University.', 'Public Administration', 'MPA'),
-(19, 'Master of Arts in Hindi', 'DEGREE', '2 Years', 'This programme offers advanced study in Hindi literature, language, and culture, promoting proficiency and critical understanding.', 15400.00, 'Bachelor’s Degree or a higher degree from a recognized University.', 'Hindi', 'MHD');
+(19, 'Master of Arts in Hindi', 'DEGREE', '2 Years', 'This programme offers advanced study in Hindi literature, language, and culture, promoting proficiency and critical understanding.', 15400.00, 'Bachelor’s Degree or a higher degree from a recognized University.', 'Hindi', 'MHD'),
+(20, 'BACHELOR OF COMPUTER APPLICATIONS', 'DEGREE', '3 years', 'The basic objective of the programme is to open a channel of admission for computing courses for students, who have done the 10+2 and are interested in taking computing/IT as a career. After acquiring the Bachelor’s Degree (BCA), there is a further educational opportunity to go for an MCA  or Master’s Programme at any other University/Institute. Also after completing BCA Programme, a student should be able to get an entry-level jobs in the field of Information Technology or ITES', 48000.00, '10+2or its equivalent', 'Computers and Programming', 'BCA');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `exam_submissions`
+--
+
+CREATE TABLE `exam_submissions` (
+  `submission_id` int(11) NOT NULL,
+  `student_id` varchar(50) NOT NULL,
+  `subject_id` varchar(50) NOT NULL,
+  `submission_date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `exam_submissions`
+--
+
+INSERT INTO `exam_submissions` (`submission_id`, `student_id`, `subject_id`, `submission_date`) VALUES
+(27, '002365', 'FEG 02', '2024-09-28 10:32:10');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `feedback`
+--
+
+CREATE TABLE `feedback` (
+  `feedback_id` int(11) NOT NULL,
+  `student_id` varchar(255) NOT NULL,
+  `course_id` varchar(255) NOT NULL,
+  `student_name` varchar(255) NOT NULL,
+  `feedback_text` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `feedback`
+--
+
+INSERT INTO `feedback` (`feedback_id`, `student_id`, `course_id`, `student_name`, `feedback_text`, `created_at`) VALUES
+(1, '002365', 'BCA', 'Vinod Kumar', 'issue releated to course', '2024-09-28 11:22:34'),
+(2, '002365', 'BCA', 'Vinod Kumar', 'issue releated to course', '2024-09-28 11:24:31'),
+(3, '002365', 'BCA', 'Vinod Kumar', 'issue releated to course', '2024-09-28 11:25:28');
 
 -- --------------------------------------------------------
 
@@ -567,16 +612,20 @@ CREATE TABLE `student` (
   `student_id` varchar(50) NOT NULL,
   `email` varchar(255) NOT NULL,
   `phone_no` varchar(15) DEFAULT NULL,
-  `course` varchar(100) DEFAULT NULL
+  `course_id` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `student`
 --
 
-INSERT INTO `student` (`id`, `student_name`, `student_id`, `email`, `phone_no`, `course`) VALUES
+INSERT INTO `student` (`id`, `student_name`, `student_id`, `email`, `phone_no`, `course_id`) VALUES
 (1, 'Vinod Kumar', '002365', 'vk16072003@gmail.com', '1234567890', 'BCA'),
-(2, 'Piyush Sharma', '64543', 'piyush072003@gmail.com', '0987654321', 'MCA');
+(2, 'Piyush Sharma', '64543', 'piyush072003@gmail.com', '0987654321', 'MCA'),
+(3, 'aman singh', 'j4574545', 'axample@email.com', '123-456-7950', 'MCA'),
+(4, 'aman singh', '56454564', 'rxample@email.com', '3164862354', NULL),
+(5, 'gasdfgasgfgdf', '45645645', 'exampl@email.com', '123-456-7950', NULL),
+(6, 'gasdfgasgfgdf', '4645564', 'exaple@email.com', '123-456-7990', 'MHD');
 
 -- --------------------------------------------------------
 
@@ -755,7 +804,45 @@ INSERT INTO `subject_info` (`id`, `subject_id`, `subject_name`, `course_id`, `se
 (28, 'BSCFAN103', 'Physical Anthropology', 'BSCFAN', 'Semester 2'),
 (29, 'BAFPC101', 'General Psychology', 'BAFPC', 'Semester 1'),
 (30, 'BAFPC102', 'Developmental Psychology', 'BAFPC', 'Semester 1'),
-(31, 'BAFPC103', 'Psychology of Learning', 'BAFPC', 'Semester 2');
+(31, 'BAFPC103', 'Psychology of Learning', 'BAFPC', 'Semester 2'),
+(32, 'FEG 02', 'Foundation course in English -2', 'BCA', 'Semester 1'),
+(33, 'ECO 01', 'Business Organization', 'BCA', 'Semester 1'),
+(34, 'BCS 011', 'Computer Basics and PC Software', 'BCA', 'Semester 1'),
+(35, 'BCS 012', 'Mathematics', 'BCA', 'Semester 1'),
+(36, 'BCSL 013', 'Computer Basics and PC Software Lab', 'BCA', 'Semester 1'),
+(37, 'ECO 02', 'Accountancy-I', 'BCA', 'Semester 2'),
+(38, 'MCS 011', 'Problem Solving and Programming', 'BCA', 'Semester 2'),
+(39, 'MCS 012', 'Computer Organization and Assembly Language Programming', 'BCA', 'Semester 2'),
+(40, 'MCS 015', 'Communication Skills', 'BCA', 'Semester 2'),
+(41, 'MCS 013', 'Discrete Mathematics', 'BCA', 'Semester 2'),
+(42, 'BCSL 021', 'C Language Programming Lab', 'BCA', 'Semester 2'),
+(43, 'BCSL 022', 'Assembly Language Programming Lab', 'BCA', 'Semester 2'),
+(44, 'MCS 021', 'Data and File Structures', 'BCA', 'Semester 3'),
+(45, 'MCS 023', 'Introduction to Database Management Systems', 'BCA', 'Semester 3'),
+(46, 'MCS 014', 'Systems Analysis and Design', 'BCA', 'Semester 3'),
+(47, 'BCS 031', 'Programming in C++', 'BCA', 'Semester 3'),
+(48, 'BCSL 032', 'C++ Programming Lab', 'BCA', 'Semester 3'),
+(49, 'BCSL 033', 'Data and File Structures Lab', 'BCA', 'Semester 3'),
+(50, 'BCSL 034', 'DBMS Lab', 'BCA', 'Semester 3'),
+(51, 'BCS 040', 'Statistical Techniques', 'BCA', 'Semester 4'),
+(52, 'MCS 024', 'Object Oriented Technologies and Java Programming', 'BCA', 'Semester 4'),
+(53, 'BCS 041', 'Fundamentals of Computer Networks', 'BCA', 'Semester 4'),
+(54, 'BCS 042', 'Introduction to Algorithm Design', 'BCA', 'Semester 4'),
+(55, 'MCSL016', 'Internet Concepts and Web Design', 'BCA', 'Semester 4'),
+(56, 'BCSL 043', 'Java Programming Lab', 'BCA', 'Semester 4'),
+(57, 'BCSL 044', 'Statistical Techniques Lab', 'BCA', 'Semester 4'),
+(58, 'BCS 051', 'Introduction to Software Engineering', 'BCA', 'Semester 5'),
+(59, 'BCS 052', 'Network Programming and Administration', 'BCA', 'Semester 5'),
+(60, 'BCS 053', 'Web Programming', 'BCA', 'Semester 5'),
+(61, 'BCS 054', 'Computer Oriented Numerical Techniques', 'BCA', 'Semester 5'),
+(62, 'BCS 055', 'Business Communication', 'BCA', 'Semester 5'),
+(63, 'BCSL 056', 'Network Programming and Administration Lab', 'BCA', 'Semester 5'),
+(64, 'BCSL 057', 'Web Programming Lab', 'BCA', 'Semester 5'),
+(65, 'BCSL 058', 'Computer Oriented Numerical Techniques Lab', 'BCA', 'Semester 5'),
+(66, 'BCS 062', 'E-Commerce', 'BCA', 'Semester 6'),
+(67, 'MCS 022', 'Operating System Concepts and Networking Management', 'BCA', 'Semester 6'),
+(68, 'BCSL 063', 'Operating System Concepts & Networking Management Lab', 'BCA', 'Semester 6'),
+(69, 'BCSP 064', 'Project', 'BCA', 'Semester 6');
 
 -- --------------------------------------------------------
 
@@ -861,7 +948,11 @@ INSERT INTO `users` (`id`, `email`, `password`, `user_type`, `user_specific_id`,
 (3, 'sd16072003@gmail.com', '$2y$10$t6mad5TUQhGzhp5584zhT.Xpf4nTl3Fr68pWZqjhw1oiPuxKxQqtS', 'teacher', '002365', 'Sunita', NULL, NULL),
 (4, 'piyush072003@gmail.com', '$2y$10$59uw7pyQAruAyZ2uhPsMaugtaxtA0yYEubx626wz2/uLSavul.85y', 'student', '64543', 'Piyush Sharma', NULL, NULL),
 (5, 'piyush1672003+gpt@gmail.com', '$2y$10$oeJaGLL4/g9x2VZap7BtP.8I.mo/XFglKBvv338YZvNgR1DLMa0PC', 'teacher', '31467', 'Sunita', NULL, NULL),
-(6, 'example@email.com', '$2y$10$JUT446vfmThPSKgjiuJjre2q7oLolaryHnaGg64taafGG7sIZLfry', 'teacher', '4654566', 'aman singh', '3164862354', NULL);
+(6, 'example@email.com', '$2y$10$JUT446vfmThPSKgjiuJjre2q7oLolaryHnaGg64taafGG7sIZLfry', 'teacher', '4654566', 'aman singh', '3164862354', NULL),
+(7, 'axample@email.com', '$2y$10$AIsys4WK2mFkVWsiPUJzqOnh4SAO3FyrhfWmzqtjMcPfVzHCVWGMS', 'student', 'j4574545', 'aman singh', '123-456-7950', 'MCA'),
+(12, 'rxample@email.com', '$2y$10$5fsYjdWb7/Tr5efpXhWRgeXC7UCcSN4mxt1KS/9Xjr7uTmYkLgNpK', 'student', '56454564', 'aman singh', '3164862354', 'PGDCSR'),
+(13, 'exampl@email.com', '$2y$10$d.AEkle8LZqjMnrGJjz0hOSoHnKBDSLFtjGv9zENz1k/.mDoZ2R6W', 'student', '45645645', 'gasdfgasgfgdf', '123-456-7950', 'BAFEG'),
+(15, 'exaple@email.com', '$2y$10$uGqfQTt4jPAMNhhoWjT2fuNYxVzuavE4SbSxTy7VstvNTOqOrxO4e', 'student', '4645564', 'gasdfgasgfgdf', '123-456-7990', 'MHD');
 
 --
 -- Indexes for dumped tables
@@ -886,6 +977,20 @@ ALTER TABLE `courses`
 ALTER TABLE `course_info`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `course_id` (`course_id`);
+
+--
+-- Indexes for table `exam_submissions`
+--
+ALTER TABLE `exam_submissions`
+  ADD PRIMARY KEY (`submission_id`),
+  ADD KEY `subject_id` (`subject_id`),
+  ADD KEY `fk_student` (`student_id`);
+
+--
+-- Indexes for table `feedback`
+--
+ALTER TABLE `feedback`
+  ADD PRIMARY KEY (`feedback_id`);
 
 --
 -- Indexes for table `student`
@@ -962,10 +1067,22 @@ ALTER TABLE `course_info`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
+-- AUTO_INCREMENT for table `exam_submissions`
+--
+ALTER TABLE `exam_submissions`
+  MODIFY `submission_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+
+--
+-- AUTO_INCREMENT for table `feedback`
+--
+ALTER TABLE `feedback`
+  MODIFY `feedback_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `student`
 --
 ALTER TABLE `student`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `student_info`
@@ -977,7 +1094,7 @@ ALTER TABLE `student_info`
 -- AUTO_INCREMENT for table `subject_info`
 --
 ALTER TABLE `subject_info`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT for table `teacher`
@@ -1001,7 +1118,7 @@ ALTER TABLE `timetable_info`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- Constraints for dumped tables
@@ -1012,6 +1129,14 @@ ALTER TABLE `users`
 --
 ALTER TABLE `attendance`
   ADD CONSTRAINT `attendance_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student_info` (`student_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `exam_submissions`
+--
+ALTER TABLE `exam_submissions`
+  ADD CONSTRAINT `exam_submissions_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student` (`student_id`),
+  ADD CONSTRAINT `exam_submissions_ibfk_2` FOREIGN KEY (`subject_id`) REFERENCES `subject_info` (`subject_id`),
+  ADD CONSTRAINT `fk_student` FOREIGN KEY (`student_id`) REFERENCES `student` (`student_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `student`
