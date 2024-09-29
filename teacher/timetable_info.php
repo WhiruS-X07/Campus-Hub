@@ -24,48 +24,53 @@ if (isset($_POST['view_timetable'])) {
             <div class="card-body">
                 <h2>View Timetable</h2>
 
-                <form method="POST" action="">
+                <form method="POST" action="" class="mb-4">
                     <div class="form-group">
                         <label for="course_id">Select Course:</label>
                         <select name="course_id" id="course_id" class="form-control" required>
                             <option value="">Select Course</option>
                             <?php while ($course_row = mysqli_fetch_assoc($course_result)): ?>
-                                <option value="<?php echo $course_row['course_id']; ?>">
-                                    <?php echo $course_row['course_name']; ?>
+                                <option value="<?php echo htmlspecialchars($course_row['course_id']); ?>">
+                                    <?php echo htmlspecialchars($course_row['course_name']); ?>
                                 </option>
                             <?php endwhile; ?>
                         </select>
                     </div>
 
-                    <button type="submit" name="view_timetable" class="btn btn-primary mt-4">View Timetable</button>
+                    <button type="submit" name="view_timetable" class="btn btn-primary">View
+                        Timetable</button>
                 </form>
 
                 <?php if (!empty($timetable_result) && mysqli_num_rows($timetable_result) > 0): ?>
-                    <table class="table table-bordered mt-4">
-                        <thead>
-                            <tr>
-                                <th>Day</th>
-                                <th>Section</th>
-                                <th>Start Time</th>
-                                <th>End Time</th>
-                                <th>Subject</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php while ($row = mysqli_fetch_assoc($timetable_result)): ?>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
                                 <tr>
-                                    <td><?php echo getDayName($row['day_of_week']); ?></td>
-                                    <td><?php echo $row['section']; ?></td>
-                                    <td><?php echo $row['start_time']; ?></td>
-                                    <td><?php echo $row['end_time']; ?></td>
-                                    <td><?php echo $row['subject_name']; ?></td>
+                                    <th>Day</th>
+                                    <th>Section</th>
+                                    <th>Start Time</th>
+                                    <th>End Time</th>
+                                    <th>Subject</th>
                                 </tr>
-                            <?php endwhile; ?>
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                <?php while ($row = mysqli_fetch_assoc($timetable_result)): ?>
+                                    <tr>
+                                        <td><?php echo getDayName($row['day_of_week']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['section']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['start_time']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['end_time']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['subject_name']); ?></td>
+                                    </tr>
+                                <?php endwhile; ?>
+                            </tbody>
+                        </table>
+                    </div>
                 <?php else: ?>
                     <?php if (isset($_POST['view_timetable'])): ?>
-                        <p>No timetable found for the selected course.</p>
+                        <div class="alert alert-warning mt-4" role="alert">
+                            No timetable found for the selected course.
+                        </div>
                     <?php endif; ?>
                 <?php endif; ?>
             </div>

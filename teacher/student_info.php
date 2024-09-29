@@ -31,60 +31,72 @@ $total_students = $total_students_result->fetch_assoc()['total'];
 
 $total_pages = ceil($total_students / $limit);
 ?>
-
 <div class="main-panel">
     <div class="content-wrapper">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>Students Information!</h2>
-            <form method="POST" class="d-flex">
-                <input type="text" name="search" value="<?php echo htmlspecialchars($search_query); ?>"
-                    placeholder="Search" class="form-control me-3" required>
-                <button type="submit" class="btn btn-primary">Search</button>
-            </form>
+        <!-- Responsive Row for Heading and Search Form -->
+        <div class="row mb-4">
+            <!-- Heading Column -->
+            <div class="col-12 col-lg-6 mb-2 mb-lg-0">
+                <h2>Students Information!</h2>
+            </div>
+
+            <!-- Search Form Column -->
+            <div class="col-12 col-lg-6 d-flex justify-content-lg-end">
+                <!-- Adjusted Form Layout -->
+                <form method="POST"
+                    class="d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center w-100">
+                    <input type="text" name="search" value="<?php echo htmlspecialchars($search_query); ?>"
+                        placeholder="Search" class="form-control me-lg-2 mb-2 mb-lg-0" >
+                    <button type="submit" class="btn btn-primary w-100 w-lg-auto">Search</button>
+                </form>
+            </div>
+        </div>
+        <!-- Responsive Table Wrapper -->
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>S No.</th>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Student ID</th>
+                        <th>Email</th>
+                        <th>Phone No</th>
+                        <th>Course</th>
+                        <th>Section</th>
+                        <th>Semester Year</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if ($result_student_info->num_rows > 0): ?>
+                        <?php
+                        $s_no = $offset + 1;
+                        while ($row = $result_student_info->fetch_assoc()): ?>
+                            <tr>
+                                <td><?php echo $s_no++; ?></td>
+                                <td>
+                                    <img src="<?php echo htmlspecialchars($row['student_img']); ?>" alt="Student Image"
+                                        style="width: 40px; height: 40px; object-fit: cover;">
+                                </td>
+                                <td><?php echo htmlspecialchars($row['student_name']); ?></td>
+                                <td><?php echo htmlspecialchars($row['student_id']); ?></td>
+                                <td><?php echo htmlspecialchars($row['email']); ?></td>
+                                <td><?php echo htmlspecialchars($row['phone_no']); ?></td>
+                                <td><?php echo htmlspecialchars($row['course']); ?></td>
+                                <td><?php echo htmlspecialchars($row['section']); ?></td>
+                                <td><?php echo htmlspecialchars($row['semester_year']); ?></td>
+                            </tr>
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="9" class="text-center">No students found</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
         </div>
 
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>S No.</th>
-                    <th>Image</th>
-                    <th>Name</th>
-                    <th>Student ID</th>
-                    <th>Email</th>
-                    <th>Phone No</th>
-                    <th>Course</th>
-                    <th>Section</th>
-                    <th>Semester Year</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if ($result_student_info->num_rows > 0): ?>
-                    <?php
-                    $s_no = $offset + 1;
-                    while ($row = $result_student_info->fetch_assoc()): ?>
-                        <tr>
-                            <td><?php echo $s_no++; ?></td>
-                            <td>
-                                <img src="<?php echo htmlspecialchars($row['student_img']); ?>" alt="Student Image"
-                                    style="width: 50px; height: 50px;">
-                            </td>
-                            <td><?php echo htmlspecialchars($row['student_name']); ?></td>
-                            <td><?php echo htmlspecialchars($row['student_id']); ?></td>
-                            <td><?php echo htmlspecialchars($row['email']); ?></td>
-                            <td><?php echo htmlspecialchars($row['phone_no']); ?></td>
-                            <td><?php echo htmlspecialchars($row['course']); ?></td>
-                            <td><?php echo htmlspecialchars($row['section']); ?></td>
-                            <td><?php echo htmlspecialchars($row['semester_year']); ?></td>
-                        </tr>
-                    <?php endwhile; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="9" class="text-center">No students found</td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
-
+        <!-- Pagination Navigation -->
         <nav class="d-flex justify-content-center align-items-center">
             <ul class="pagination">
                 <li class="page-item <?php echo ($page <= 1) ? 'disabled' : ''; ?>">
@@ -126,6 +138,8 @@ $total_pages = ceil($total_students / $limit);
         </nav>
     </div>
 </div>
+
+
 
 <?php
 include("footer.php");

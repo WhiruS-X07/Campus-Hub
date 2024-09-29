@@ -78,34 +78,36 @@ ob_end_flush();
                     <div class="card-body">
                         <h5 class="font-weight-bold text-center">Timetable</h5>
                         <hr>
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Day of Week</th>
-                                    <th>Start Time</th>
-                                    <th>End Time</th>
-                                    <th>Subject ID</th>
-                                    <th>Section</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if ($timetable !== null): ?>
-                                    <?php foreach ($timetable as $entry): ?>
-                                        <tr>
-                                            <td><?php echo htmlspecialchars($entry['day_of_week']); ?></td>
-                                            <td><?php echo htmlspecialchars($entry['start_time']); ?></td>
-                                            <td><?php echo htmlspecialchars($entry['end_time']); ?></td>
-                                            <td><?php echo htmlspecialchars($entry['subject_id']); ?></td>
-                                            <td><?php echo htmlspecialchars($entry['section']); ?></td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
                                     <tr>
-                                        <td colspan="5" class="text-center">Timetable is currently under updation.</td>
+                                        <th>Day of Week</th>
+                                        <th>Start Time</th>
+                                        <th>End Time</th>
+                                        <th>Subject ID</th>
+                                        <th>Section</th>
                                     </tr>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    <?php if ($timetable !== null): ?>
+                                        <?php foreach ($timetable as $entry): ?>
+                                            <tr>
+                                                <td><?php echo htmlspecialchars($entry['day_of_week']); ?></td>
+                                                <td><?php echo htmlspecialchars($entry['start_time']); ?></td>
+                                                <td><?php echo htmlspecialchars($entry['end_time']); ?></td>
+                                                <td><?php echo htmlspecialchars($entry['subject_id']); ?></td>
+                                                <td><?php echo htmlspecialchars($entry['section']); ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <tr>
+                                            <td colspan="5" class="text-center">Timetable is currently under updation.</td>
+                                        </tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

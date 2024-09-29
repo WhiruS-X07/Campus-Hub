@@ -80,7 +80,7 @@ ob_end_flush();
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="row">
-            <div class="col-md-12 grid-margin mb-3">
+            <div class="col-12 mb-3">
                 <h2 class="font-weight-bold text-center">Enrolled Course Details</h2>
             </div>
         </div>
@@ -93,14 +93,14 @@ ob_end_flush();
                                 <?php echo htmlspecialchars($course['course_name']); ?>
                             </h5>
                             <hr>
-                            <div class="row d-flex justify-content-between align-items-center mb-4">
-                                <div class="col-md-7 ">
+                            <div class="row d-flex justify-content-between align-items-start mb-4">
+                                <div class="col-md-7 col-12">
                                     <p><strong>Specialization:</strong>
                                         <?php echo htmlspecialchars($course['specialization']); ?></p>
                                     <p><strong>Description:</strong> <?php echo htmlspecialchars($course['description']); ?>
                                     </p>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-5 col-12">
                                     <p><strong>Course Type:</strong> <?php echo htmlspecialchars($course['course_type']); ?>
                                     </p>
                                     <p><strong>Duration:</strong> <?php echo htmlspecialchars($course['duration']); ?></p>
@@ -121,37 +121,38 @@ ob_end_flush();
             <div class="card mt-4">
                 <div class="card-body">
                     <div class="subject-section">
-                        <div class="card-body">
-                            <h5 class="font-weight-bold d-flex justify-content-center" style="font-size: 1.5rem;">
-                                Subjects in the Course
-                            </h5>
-                            <hr>
-                        </div>
-                        <table class="table table-striped ">
-                            <thead>
-                                <tr>
-                                    <th>Subject ID</th>
-                                    <th>Subject Name</th>
-                                    <th>Semester/Year</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if (count($subjects) > 0): ?>
-                                    <?php foreach ($subjects as $subject): ?>
-                                        <tr>
-                                            <td><?php echo htmlspecialchars($subject['subject_id']); ?></td>
-                                            <td><?php echo htmlspecialchars($subject['subject_name']); ?></td>
-                                            <td><?php echo htmlspecialchars($subject['semester_year']); ?></td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
+                        <h5 class="font-weight-bold text-center" style="font-size: 1.5rem;">
+                            Subjects in the Course
+                        </h5>
+                        <hr>
+                        <div class="table-responsive">
+                            <table class="table table-striped ">
+                                <thead>
                                     <tr>
-                                        <td colspan="3" class="text-center">No subjects found for this course. Information
-                                            is currently being updated.</td>
+                                        <th>Subject ID</th>
+                                        <th>Subject Name</th>
+                                        <th>Semester/Year</th>
                                     </tr>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    <?php if (count($subjects) > 0): ?>
+                                        <?php foreach ($subjects as $subject): ?>
+                                            <tr>
+                                                <td><?php echo htmlspecialchars($subject['subject_id']); ?></td>
+                                                <td><?php echo htmlspecialchars($subject['subject_name']); ?></td>
+                                                <td><?php echo htmlspecialchars($subject['semester_year']); ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <tr>
+                                            <td colspan="3" class="text-center">No subjects found for this course.
+                                                Information
+                                                is currently being updated.</td>
+                                        </tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

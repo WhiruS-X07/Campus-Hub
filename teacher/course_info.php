@@ -77,31 +77,37 @@ ob_end_flush();
         background-color: rgba(111, 66, 193, 0.7);
     }
 </style>
-
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="row">
             <?php while ($course = $result_courses->fetch_assoc()): ?>
-                <div class="col-md-4 col-sm-6">
+                <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="card" style="margin-top: 20px;">
                         <div class="card-body">
-                            <h5 class="font-weight-bold text-center" style="font-size: 1.5rem;">
+                            <h5 class="font-weight-bold text-center" style="font-size: 1.25rem;">
                                 <?php echo htmlspecialchars($course['course_name']); ?>
                                 (<?php echo htmlspecialchars($course['course_id']); ?>)
                             </h5>
                             <hr class="divider">
-                            <p class="description" style="margin-bottom: 20px;">
+                            <!-- Store the full description in a data attribute -->
+                            <p class="description"
+                                data-full-description="<?php echo htmlspecialchars($course['description']); ?>"
+                                style="margin-bottom: 20px;">
                                 <?php echo htmlspecialchars(substr($course['description'], 0, 100)); ?>...
                             </p>
-                            <div class="d-flex justify-content-between">
-                                <p><strong>Duration:</strong> <?php echo htmlspecialchars($course['duration']); ?></p>
-                                <p><strong>Fee:</strong> ₹ <?php echo htmlspecialchars($course['fee_structure']); ?></p>
+                            <div class="d-flex justify-content-between flex-wrap">
+                                <p class="mb-1"><strong>Duration:</strong>
+                                    <?php echo htmlspecialchars($course['duration']); ?></p>
+                                <p class="mb-1"><strong>Fee:</strong> ₹
+                                    <?php echo htmlspecialchars($course['fee_structure']); ?>
+                                </p>
                             </div>
                             <p>
                                 <strong>Eligibility:</strong> <?php echo htmlspecialchars($course['eligibility']); ?>
                             </p>
-                            <div class="flex-row">
-                                <p>
+                            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                                <p class="mb-1 text-wrap"
+                                    style="word-wrap: break-word; overflow-wrap: break-word; max-width: 75%;">
                                     <strong>Specialization:</strong>
                                     <?php echo htmlspecialchars($course['specialization']); ?>
                                 </p>
@@ -123,6 +129,30 @@ ob_end_flush();
 </div>
 
 <script>
+    // JavaScript to adjust the description length based on screen size
+    document.addEventListener("DOMContentLoaded", function () {
+        const descriptions = document.querySelectorAll(".description");
+
+        descriptions.forEach(function (description) {
+            const fullText = description.getAttribute("data-full-description");
+            const screenWidth = window.innerWidth;
+
+            // Set description length based on screen size
+            let shortenedText = screenWidth < 768 ? fullText.substring(0, 70) : fullText.substring(0, 100);
+            description.textContent = shortenedText + '...';
+        });
+
+        // Adjust description when the window is resized
+        window.addEventListener("resize", function () {
+            descriptions.forEach(function (description) {
+                const fullText = description.getAttribute("data-full-description");
+                const screenWidth = window.innerWidth;
+                let shortenedText = screenWidth < 768 ? fullText.substring(0, 70) : fullText.substring(0, 100);
+                description.textContent = shortenedText + '...';
+            });
+        });
+    });
+
     function confirmDelete() {
         return confirm("Are you sure you want to delete this course?");
     }

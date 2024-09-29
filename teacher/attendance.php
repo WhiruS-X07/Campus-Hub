@@ -61,87 +61,115 @@ if (isset($_POST['submit'])) {
     <div class="content-wrapper">
         <div class="card">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2>Mark Attendance</h2>
-                    <form method="POST" class="d-flex">
-                        <input type="text" name="search_query" class="form-control me-3" placeholder="Search"
-                            value="<?php echo htmlspecialchars($search_query); ?>" />
-                        <button type="submit" name="search" class="btn btn-primary">Search</button>
-                    </form>
+                <!-- Responsive Row for Heading and Search Form -->
+                <div class="row mb-4">
+                    <!-- Heading Column -->
+                    <div class="col-12 col-lg-6 mb-2 mb-lg-0">
+                        <h2>Mark Attendance</h2>
+                    </div>
+
+                    <!-- Search Form Column -->
+                    <div class="col-12 col-lg-6 d-flex justify-content-lg-end">
+                        <form method="POST"
+                            class="d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center w-100">
+                            <input type="text" name="search_query" class="form-control me-lg-2 mb-2 mb-lg-0"
+                                placeholder="Search" value="<?php echo htmlspecialchars($search_query); ?>" required />
+                            <button type="submit" name="search" class="btn btn-primary w-100 w-lg-auto">Search</button>
+                        </form>
+                    </div>
                 </div>
-                <?php if ($success_message != ''): ?>
+
+                <!-- Success Message -->
+                <?php if (!empty($success_message)): ?>
                     <div class="alert alert-success" role="alert">
                         <?php echo $success_message; ?>
                     </div>
                 <?php endif; ?>
+
+                <!-- Attendance Form -->
                 <form method="POST" action="">
                     <div class="form-group mt-3">
                         <label for="attendance_date">Attendance Date:</label>
                         <input type="date" name="attendance_date" required class="form-control" />
                     </div>
 
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Student ID</th>
-                                <th>Student Name</th>
-                                <th>Course</th>
-                                <th>Section</th>
-                                <th>Semester</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            while ($row = mysqli_fetch_assoc($result)) {
-                                echo "<tr>";
-                                echo "<td>" . $row['student_id'] . "</td>";
-                                echo "<td>" . $row['student_name'] . "</td>";
-                                echo "<td>" . $row['course'] . "</td>";
-                                echo "<td>" . $row['section'] . "</td>";
-                                echo "<td>" . $row['semester_year'] . "</td>";
-                                echo "<td>
-                                    <select name='attendance_status[" . $row['student_id'] . "]' class='form-control'>
-                                        <option value='Present'>Present</option>
-                                        <option value='Absent'>Absent</option>
-                                        <option value='Late'>Late</option>
-                                        <option value='Excused'>Excused</option>
-                                    </select>
-                                </td>";
-                                echo "</tr>";
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                    <button type="submit" name="submit" class="btn btn-primary mt-4">Submit Attendance</button>
+                    <!-- Responsive Table Wrapper -->
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Student Name</th>
+                                    <th>Course</th>
+                                    <th>Section</th>
+                                    <th>Semester</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                    echo "<tr>";
+                                    echo "<td>" . htmlspecialchars($row['student_id']) . "</td>";
+                                    echo "<td>" . htmlspecialchars($row['student_name']) . "</td>";
+                                    echo "<td>" . htmlspecialchars($row['course']) . "</td>";
+                                    echo "<td>" . htmlspecialchars($row['section']) . "</td>";
+                                    echo "<td>" . htmlspecialchars($row['semester_year']) . "</td>";
+                                    echo "<td>
+                                        <select name='attendance_status[" . htmlspecialchars($row['student_id']) . "]' class='form-control'>
+                                            <option value='Present'>Present</option>
+                                            <option value='Absent'>Absent</option>
+                                            <option value='Late'>Late</option>
+                                            <option value='Excused'>Excused</option>
+                                        </select>
+                                    </td>";
+                                    echo "</tr>";
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" name="submit" class="btn btn-primary mt-4 w-lg-auto">Submit
+                        Attendance</button>
                 </form>
 
-                <nav>
-                    <ul class="pagination justify-content-center mt-4">
-                        <?php
-                        if ($total_pages > 1) {
-                            if ($page > 1) {
-                                echo '<li class="page-item"><a class="page-link" href="attendance.php?page=' . ($page - 1) . '&search_query=' . urlencode($search_query) . '">Previous</a></li>';
-                            }
+                <!-- Pagination Navigation -->
+                <nav class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        <?php if ($total_pages > 1): ?>
+                            <?php if ($page > 1): ?>
+                                <li class="page-item">
+                                    <a class="page-link"
+                                        href="attendance.php?page=<?php echo ($page - 1); ?>&search_query=<?php echo urlencode($search_query); ?>">Previous</a>
+                                </li>
+                            <?php endif; ?>
 
-                            for ($i = 1; $i <= $total_pages; $i++) {
-                                if ($i == 1 || $i == $total_pages || ($i >= $page - 1 && $i <= $page + 1)) {
-                                    echo '<li class="page-item ' . ($i == $page ? 'active' : '') . '"><a class="page-link" href="attendance.php?page=' . $i . '&search_query=' . urlencode($search_query) . '">' . $i . '</a></li>';
-                                } elseif ($i == $page - 2 || $i == $page + 2) {
-                                    echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
-                                }
-                            }
+                            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                                <?php if ($i == 1 || $i == $total_pages || ($i >= $page - 1 && $i <= $page + 1)): ?>
+                                    <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
+                                        <a class="page-link"
+                                            href="attendance.php?page=<?php echo $i; ?>&search_query=<?php echo urlencode($search_query); ?>"><?php echo $i; ?></a>
+                                    </li>
+                                <?php elseif ($i == $page - 2 || $i == $page + 2): ?>
+                                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                                <?php endif; ?>
+                            <?php endfor; ?>
 
-                            if ($page < $total_pages) {
-                                echo '<li class="page-item"><a class="page-link" href="attendance.php?page=' . ($page + 1) . '&search_query=' . urlencode($search_query) . '">Next</a></li>';
-                            }
-                        }
-                        ?>
+                            <?php if ($page < $total_pages): ?>
+                                <li class="page-item">
+                                    <a class="page-link"
+                                        href="attendance.php?page=<?php echo ($page + 1); ?>&search_query=<?php echo urlencode($search_query); ?>">Next</a>
+                                </li>
+                            <?php endif; ?>
+                        <?php endif; ?>
                     </ul>
                 </nav>
             </div>
         </div>
     </div>
 </div>
+
 
 <?php include("footer.php"); ?>

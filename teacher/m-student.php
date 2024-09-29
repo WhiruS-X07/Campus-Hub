@@ -184,50 +184,54 @@ if (isset($_POST['edit'])) {
                     </form>
 
                     <?php if (isset($result) && mysqli_num_rows($result) > 0): ?>
-                        <table class="table custom-table mt-4">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th>Student Image</th>
-                                    <th>Student Name</th>
-                                    <th>Student ID</th>
-                                    <th>Email</th>
-                                    <th>Phone No</th>
-                                    <th>Course</th>
-                                    <th>Section</th>
-                                    <th>Semester/Year</th>
-                                    <th class="text-right">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                        <div class="table-responsive">
+                            <table class="table custom-table mt-4">
+                                <thead class="thead-light">
                                     <tr>
-                                        <td><img src="<?php echo $row['student_img']; ?>" alt="Student Image" width="50"
-                                                height="50"></td>
-                                        <td><?php echo $row['student_name']; ?></td>
-                                        <td><?php echo $row['student_id']; ?></td>
-                                        <td><?php echo $row['email']; ?></td>
-                                        <td><?php echo $row['phone_no']; ?></td>
-                                        <td><?php echo $row['course']; ?></td>
-                                        <td><?php echo $row['section']; ?></td>
-                                        <td><?php echo $row['semester_year']; ?></td>
-                                        <td class="text-right">
-                                            <form method="POST" style="display:inline-block;">
-                                                <input type="hidden" name="edit_id" value="<?php echo $row['student_id']; ?>">
-                                                <button type="submit" name="edit" class="btn btn-info btn-sm">Edit</button>
-                                            </form>
-                                            <form method="POST" style="display:inline-block;">
-                                                <input type="hidden" name="delete_id" value="<?php echo $row['student_id']; ?>">
-                                                <button type="submit" name="delete"
-                                                    class="btn btn-danger btn-sm">Delete</button>
-                                            </form>
-                                        </td>
+                                        <th>Student Image</th>
+                                        <th>Student Name</th>
+                                        <th>Student ID</th>
+                                        <th>Email</th>
+                                        <th>Phone No</th>
+                                        <th>Course</th>
+                                        <th>Section</th>
+                                        <th>Semester/Year</th>
+                                        <th class="text-right">Actions</th>
                                     </tr>
-                                <?php endwhile; ?>
-                            </tbody>
-                        </table>
-                    <?php elseif (isset($result)): ?>
-                        <p>No students found matching your search criteria.</p>
-                    <?php endif; ?>
+                                </thead>
+                                <tbody>
+                                    <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                                        <tr>
+                                            <td><img src="<?php echo $row['student_img']; ?>" alt="Student Image" width="50"
+                                                    height="50"></td>
+                                            <td><?php echo $row['student_name']; ?></td>
+                                            <td><?php echo $row['student_id']; ?></td>
+                                            <td><?php echo $row['email']; ?></td>
+                                            <td><?php echo $row['phone_no']; ?></td>
+                                            <td><?php echo $row['course']; ?></td>
+                                            <td><?php echo $row['section']; ?></td>
+                                            <td><?php echo $row['semester_year']; ?></td>
+                                            <td class="text-right">
+                                                <form method="POST" style="display:inline-block;">
+                                                    <input type="hidden" name="edit_id"
+                                                        value="<?php echo $row['student_id']; ?>">
+                                                    <button type="submit" name="edit" class="btn btn-info btn-sm">Edit</button>
+                                                </form>
+                                                <form method="POST" style="display:inline-block;">
+                                                    <input type="hidden" name="delete_id"
+                                                        value="<?php echo $row['student_id']; ?>">
+                                                    <button type="submit" name="delete"
+                                                        class="btn btn-danger btn-sm">Delete</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    <?php endwhile; ?>
+                                </tbody>
+                            </table>
+                        <?php elseif (isset($result)): ?>
+                            <p>No students found matching your search criteria.</p>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
         </div>
