@@ -165,7 +165,7 @@ include("sidebar.php");
                                                 <th>Section</th>
                                                 <th>Time</th>
                                                 <th>Date</th>
-                                                <th class="text-right">Action</th>
+                                                <th class="text-right">Status</th> <!-- Changed to "Status" -->
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -173,69 +173,73 @@ include("sidebar.php");
                                                 <td>Biology</td>
                                                 <td>B.Sc</td>
                                                 <td>A</td>
-                                                <td>02.00pm</td>
+                                                <td>02:00 PM</td>
                                                 <td>25/09/2024</td>
-                                                <td class="text-right">
-                                                    <button type="button" data-toggle="modal" data-target="#delete_exam"
-                                                        class="btn btn-danger btn-sm mb-1"><i
-                                                            class="far fa-trash-alt"></i></button>
-                                                </td>
+                                                <td class="text-right">Scheduled</td> <!-- Display status -->
                                             </tr>
                                             <tr>
                                                 <td>Mathematics</td>
                                                 <td>MCA</td>
                                                 <td>A</td>
-                                                <td>11.00am</td>
+                                                <td>11:00 AM</td>
                                                 <td>26/09/2024</td>
-                                                <td class="text-right">
-                                                    <button type="button" data-toggle="modal" data-target="#delete_exam"
-                                                        class="btn btn-danger btn-sm mb-1"><i
-                                                            class="far fa-trash-alt"></i></button>
-                                                </td>
+                                                <td class="text-right">Scheduled</td> <!-- Display status -->
                                             </tr>
                                             <tr>
                                                 <td>Physics</td>
                                                 <td>B.Sc</td>
                                                 <td>B</td>
-                                                <td>01.00pm</td>
+                                                <td>01:00 PM</td>
                                                 <td>27/09/2024</td>
-                                                <td class="text-right">
-                                                    <button type="button" data-toggle="modal" data-target="#delete_exam"
-                                                        class="btn btn-danger btn-sm mb-1"><i
-                                                            class="far fa-trash-alt"></i></button>
-                                                </td>
+                                                <td class="text-right">Scheduled</td> <!-- Display status -->
                                             </tr>
                                             <tr>
                                                 <td>History</td>
                                                 <td>BBA</td>
                                                 <td>C</td>
-                                                <td>09.00am</td>
+                                                <td>09:00 AM</td>
                                                 <td>28/09/2024</td>
-                                                <td class="text-right">
-                                                    <button type="button" data-toggle="modal" data-target="#delete_exam"
-                                                        class="btn btn-danger btn-sm mb-1"><i
-                                                            class="far fa-trash-alt"></i></button>
-                                                </td>
+                                                <td class="text-right">Scheduled</td> <!-- Display status -->
                                             </tr>
-                                            <td>Geography</td>
-                                            <td>BBA</td>
-                                            <td>D</td>
-                                            <td>03.00pm</td>
-                                            <td>29/09/2024</td>
-                                            <td class="text-right">
-                                                <button type="button" data-toggle="modal" data-target="#delete_exam"
-                                                    class="btn btn-danger btn-sm mb-1"><i
-                                                        class="far fa-trash-alt"></i></button>
-                                            </td>
+                                            <tr>
+                                                <td>Geography</td>
+                                                <td>BBA</td>
+                                                <td>D</td>
+                                                <td>03:00 PM</td>
+                                                <td>29/09/2024</td>
+                                                <td class="text-right">Scheduled</td> <!-- Display status -->
+                                            </tr>
+                                            <tr>
+                                                <td>Economics</td>
+                                                <td>BBA</td>
+                                                <td>B</td>
+                                                <td>01:30 PM</td>
+                                                <td>01/10/2024</td>
+                                                <td class="text-right">Scheduled</td> <!-- Display status -->
+                                            </tr>
+                                            <tr>
+                                                <td>Computer Science</td>
+                                                <td>MCA</td>
+                                                <td>C</td>
+                                                <td>04:00 PM</td>
+                                                <td>02/10/2024</td>
+                                                <td class="text-right">Scheduled</td> <!-- Display status -->
+                                            </tr>
+                                            <tr>
+                                                <td>Literature</td>
+                                                <td>B.A</td>
+                                                <td>D</td>
+                                                <td>11:00 AM</td>
+                                                <td>03/10/2024</td>
+                                                <td class="text-right">Scheduled</td> <!-- Display status -->
                                             </tr>
                                         </tbody>
                                     </table>
-
-
                                 </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
