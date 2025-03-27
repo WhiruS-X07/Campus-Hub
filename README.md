@@ -1,4 +1,4 @@
-# School Management System
+# Campus Hub (School Management System)
 
 ## Overview
 This School Management System is a web application designed to streamline the management of student and teacher information. It provides essential functionalities for both teachers and students to manage their profiles and access relevant information.
