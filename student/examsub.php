@@ -13,7 +13,7 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
 $user_id = $_SESSION['user_id'];
 
 // Fetch user email from the users table
-$sql = "SELECT email FROM users WHERE id = ?";
+$sql = "SELECT email FROM users_info WHERE id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -28,7 +28,7 @@ if ($result->num_rows > 0) {
 }
 
 // Fetch student details using the email
-$sql = "SELECT student_id, course_id FROM student WHERE email = ?";
+$sql = "SELECT student_id, course_id FROM students WHERE email = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $user_email);
 $stmt->execute();
@@ -44,7 +44,7 @@ if ($result->num_rows > 0) {
 }
 
 // Fetch subjects for the course
-$sql = "SELECT subject_id, subject_name FROM subject_info WHERE course_id = ?";
+$sql = "SELECT subject_id, subject_name FROM subject_details WHERE course_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $course_id);
 $stmt->execute();
@@ -74,7 +74,7 @@ if (($current_month >= 3 && $current_month <= 5)) {
 
 // Check if the student has already submitted during the current cycle
 $submitted_subjects = [];
-$sql = "SELECT subject_id FROM exam_submissions WHERE student_id = ?";
+$sql = "SELECT subject_id FROM exam_sub WHERE student_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $student_id);
 $stmt->execute();
@@ -108,19 +108,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $registration_warning = "You have already submitted for these subjects: " . implode(', ', $already_submitted);
             } else {
                 if (!empty($unique_subject_ids)) {
-                    foreach ($unique_subject_ids as $subject_id) {
-                        // Check if subject_id exists in subject_info
-                        $checkSql = "SELECT subject_id FROM subject_info WHERE subject_id = ?";
-                        $checkStmt = $conn->prepare($checkSql);
-                        $checkStmt->bind_param("s", $subject_id);
-                        $checkStmt->execute();
-                        $checkResult = $checkStmt->get_result();
+                    // Check for valid course_id before proceeding
+                    $checkCourseSql = "SELECT course_id FROM subject_details WHERE subject_id = ?";
+                    $checkCourseStmt = $conn->prepare($checkCourseSql);
 
-                        if ($checkResult->num_rows > 0) {
-                            // Save the exam data to the database for each selected subject
-                            $sql = "INSERT INTO exam_submissions (student_id, subject_id) VALUES (?, ?)";
-                            $stmt = $conn->prepare($sql);
-                            $stmt->bind_param("ss", $student_id, $subject_id);
+                    // Prepare the final insert statement once
+                    $sql = "INSERT INTO exam_sub (student_id, subject_id, course_id) VALUES (?, ?, ?)";
+                    $stmt = $conn->prepare($sql);
+
+                    foreach ($unique_subject_ids as $subject_id) {
+                        // Validate subject_id and get course_id
+                        $checkCourseStmt->bind_param("s", $subject_id);
+                        $checkCourseStmt->execute();
+                        $checkCourseResult = $checkCourseStmt->get_result();
+
+                        if ($checkCourseResult->num_rows > 0) {
+                            $row = $checkCourseResult->fetch_assoc();
+                            $course_id = $row['course_id'];
+
+                            // Insert into exam_sub
+                            $stmt->bind_param("sss", $student_id, $subject_id, $course_id);
                             if (!$stmt->execute()) {
                                 echo "<div class='alert alert-danger'>Error submitting exam for subject " . htmlspecialchars($subject_id) . ": " . $stmt->error . "</div>";
                             }
@@ -128,7 +135,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             echo "<div class='alert alert-warning'>Subject ID " . htmlspecialchars($subject_id) . " does not exist!</div>";
                         }
                     }
-                    $submission_message = "Exam registration successful for the selected subjects.<br>Payment Link Send To Your Email Address.";
+
+                    $submission_message = "Exam registration successful for the selected subjects. Payment Link Sent To Your Email Address.";
                 }
             }
         }
@@ -142,32 +150,37 @@ ob_end_flush();
     <div class="content-wrapper">
         <div class="row">
             <div class="col-md-12 grid-margin mb-3">
-                <h2 class="font-weight-bold text-center">Take Your Exam</h2>
-                <p class="text-center"><?php echo $cycle; ?></p>
+                <h2 class="font-weight-bold text-center text-primary">📚 Take Your Exam</h2>
+                <p class="text-center text-muted">Cycle: <?php echo htmlspecialchars($cycle); ?></p>
 
                 <!-- Display registration warning message if it exists -->
                 <?php if ($registration_warning): ?>
-                    <div class="alert alert-warning text-center"><?php echo $registration_warning; ?></div>
+                    <div class="alert alert-warning text-center shadow-sm">⚠️
+                        <?php echo htmlspecialchars($registration_warning); ?>
+                    </div>
                 <?php endif; ?>
 
                 <!-- Display submission success message if it exists -->
                 <?php if ($submission_message): ?>
-                    <div class="alert alert-success text-center"><?php echo $submission_message; ?></div>
+                    <div class="alert alert-success text-center shadow-sm">✅
+                        <?php echo htmlspecialchars($submission_message); ?>
+                    </div>
                 <?php endif; ?>
             </div>
         </div>
 
         <div class="row">
             <div class="col-lg-12">
-                <div class="card">
+                <div class="card shadow-sm border-0">
                     <div class="card-body">
-                        <h5 class="font-weight-bold" style="text-size: 2em;">Select Subjects</h5>
+                        <h5 class="font-weight-bold mb-4 text-primary">Select Subjects</h5>
                         <form action="" method="POST" id="subject-form">
-                            <div class="row">
-                                <?php for ($i = 1; $i <= 12; $i++): ?>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="subject_id_<?php echo $i; ?>">Choose Subject <?php echo $i; ?>:</label>
-                                        <select name="subject_ids[]" id="subject_id_<?php echo $i; ?>" class="form-control"
+                            <div class="row g-3" id="subject-container">
+                                <?php for ($i = 1; $i <= 4; $i++): ?>
+                                    <div class="col-md-6 mb-3 subject-block">
+                                        <label class="form-label" for="subject_id_<?php echo $i; ?>">Choose Subject
+                                            <?php echo $i; ?>:</label>
+                                        <select name="subject_ids[]" id="subject_id_<?php echo $i; ?>" class="form-select"
                                             onchange="updateSubjectSelectors(this)">
                                             <option value="">Select a subject</option>
                                             <?php foreach ($subjects as $subject): ?>
@@ -177,39 +190,76 @@ ob_end_flush();
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
-                                    <?php if ($i % 2 == 0 && $i < 12): ?>
-                                    </div>
-                                    <div class="row">
-                                    <?php endif; ?>
                                 <?php endfor; ?>
                             </div>
-                            <button type="submit" class="btn btn-primary">Submit Exam</button>
-                        </form>
-
+                            <div class="d-flex flex-column">
+                                <button type="button" class="btn btn-outline-secondary mb-3" onclick="addSubjectField()"
+                                    id="add-subject-btn">➕ Add More Subjects</button>
+                                <button type="submit" class="btn btn-primary">🚀 Submit Exam</button>
+                            </div>
                     </div>
                 </div>
+                </form>
             </div>
         </div>
-        <?php include("footer.php"); ?>
     </div>
 </div>
-
+<?php include("footer.php"); ?>
+</div>
+</div>
 <script>
+    let subjectCount = 4;
+
+    function addSubjectField() {
+        if (subjectCount >= 8) {
+            alert('You can only add up to 8 subjects.');
+            return;
+        }
+        subjectCount++;
+
+        const container = document.getElementById('subject-container');
+        const div = document.createElement('div');
+        div.className = 'col-md-6 mb-3 subject-block';
+        div.innerHTML = `
+            <label for="subject_id_${subjectCount}">Choose Subject ${subjectCount}:</label>
+            <select name="subject_ids[]" id="subject_id_${subjectCount}" class="form-control" onchange="updateSubjectSelectors(this)">
+                <option value="">Select a subject</option>
+                <?php foreach ($subjects as $subject): ?>
+                    <option value="<?php echo htmlspecialchars($subject['subject_id']); ?>">
+                        <?php echo htmlspecialchars($subject['subject_id']) . ": " . htmlspecialchars($subject['subject_name']); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        `;
+        container.appendChild(div);
+
+        if (subjectCount === 8) {
+            document.getElementById('add-subject-btn').disabled = true;
+        }
+    }
+
     function updateSubjectSelectors(selectedElement) {
         const selectedValue = selectedElement.value;
         const allSelectors = document.querySelectorAll('select[name="subject_ids[]"]');
 
+        // Restore all options before applying the new state
         allSelectors.forEach((selector) => {
-            if (selector !== selectedElement) {
-                const options = selector.querySelectorAll('option');
-                options.forEach((option) => {
-                    if (option.value === selectedValue) {
-                        option.style.display = 'none'; // Hide the option if it is already selected in another dropdown
-                    } else {
-                        option.style.display = 'block'; // Show the option if it is not selected
-                    }
-                });
-            }
+            const options = selector.querySelectorAll('option');
+            options.forEach((option) => {
+                option.style.display = 'block';
+            });
+        });
+
+        // Hide already selected subjects
+        allSelectors.forEach((selector) => {
+            const selectedOptions = Array.from(allSelectors).map(sel => sel.value);
+            const options = selector.querySelectorAll('option');
+
+            options.forEach((option) => {
+                if (selectedOptions.includes(option.value) && option.value !== selector.value) {
+                    option.style.display = 'none';
+                }
+            });
         });
     }
 </script>

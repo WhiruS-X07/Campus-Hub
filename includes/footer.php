@@ -1,5 +1,5 @@
 <!-- Footer Section -->
-<footer style="background: url('./assets/images/still-life-851328_1280.jpg') center/cover no-repeat">
+<footer style="background: url('./assets/images/stil.jpg') center/cover no-repeat">
   <!-- Semi-transparent overlay for better readability of the text on the background image -->
   <div class="py-5 text-white" style="background: rgba(0, 0, 0, 0.75);">
     <div class="container-fluid">
@@ -44,18 +44,14 @@
           </div>
         </div>
 
-        <!-- Subscribe Now Column -->
+        <!-- Connect Us Column -->
         <div class="col-lg-3">
-          <h5>Subscribe Now</h5>
-          <form action="">
-            <!-- Material input for email subscription -->
-            <div class="form-group">
-              <input type="email" id="email-s" class="form-control" placeholder="Your Email" aria-label="Your Email">
-            </div>
-            <!-- Submit button with enhanced style and hover effect -->
-            <button class="btn btn-secondary py-2 btn-block">Submit</button>
-          </form>
+          <h5>Connect Us</h5>
+          <!-- Button to navigate to the Home Page -->
+          <a href="#home" class="btn btn-secondary py-2 btn-block">Get in Touch with Us</a>
         </div>
+
+
       </div>
     </div>
   </div>
@@ -64,7 +60,7 @@
 <!-- Bottom Copyright Section -->
 <section class="py-2 bg-dark text-light">
   <div class="container-fluid text-center">
-    &copy; 2024 All Rights Reserved. <a href="#" class="text-light">School Management System</a>
+    &copy; 2024 All Rights Reserved. <a href="#" class="text-light">Campus Hub</a>
   </div>
 </section>
 </body>

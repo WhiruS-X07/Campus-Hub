@@ -4,15 +4,17 @@ include("header.php");
 include("sidebar.php");
 include('../includes/config.php');
 
-$course_query = "SELECT * FROM course_info";
+// Fetch all courses
+$course_query = "SELECT * FROM course_details";
 $course_result = mysqli_query($conn, $course_query);
-$timetable_result = [];
+$timetable_result = null;
 
 if (isset($_POST['view_timetable'])) {
-    $course_id = $_POST['course_id'];
+    $course_id = mysqli_real_escape_string($conn, $_POST['course_id']);
+
     $timetable_query = "SELECT t.*, s.subject_name 
                         FROM timetable_info t 
-                        JOIN subject_info s ON t.subject_id = s.subject_id 
+                        JOIN subject_details s ON t.subject_id = s.subject_id 
                         WHERE t.course_id = '$course_id'";
     $timetable_result = mysqli_query($conn, $timetable_query);
 }
@@ -37,17 +39,15 @@ if (isset($_POST['view_timetable'])) {
                         </select>
                     </div>
 
-                    <button type="submit" name="view_timetable" class="btn btn-primary">View
-                        Timetable</button>
+                    <button type="submit" name="view_timetable" class="btn btn-primary">View Timetable</button>
                 </form>
 
-                <?php if (!empty($timetable_result) && mysqli_num_rows($timetable_result) > 0): ?>
+                <?php if ($timetable_result && mysqli_num_rows($timetable_result) > 0): ?>
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
                                     <th>Day</th>
-                                    <th>Section</th>
                                     <th>Start Time</th>
                                     <th>End Time</th>
                                     <th>Subject</th>
@@ -56,8 +56,7 @@ if (isset($_POST['view_timetable'])) {
                             <tbody>
                                 <?php while ($row = mysqli_fetch_assoc($timetable_result)): ?>
                                     <tr>
-                                        <td><?php echo getDayName($row['day_of_week']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['section']); ?></td>
+                                        <td><?php echo getDayName($row['day']); ?></td>
                                         <td><?php echo htmlspecialchars($row['start_time']); ?></td>
                                         <td><?php echo htmlspecialchars($row['end_time']); ?></td>
                                         <td><?php echo htmlspecialchars($row['subject_name']); ?></td>
@@ -79,6 +78,7 @@ if (isset($_POST['view_timetable'])) {
 </div>
 
 <?php
+// Function to get the day name from number
 function getDayName($dayNumber)
 {
     $days_of_week = [

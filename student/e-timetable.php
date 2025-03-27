@@ -13,7 +13,7 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
 $user_id = $_SESSION['user_id'];
 
 // Fetch user email from the users table
-$sql = "SELECT email FROM users WHERE id = ?";
+$sql = "SELECT email FROM users_info WHERE id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -28,7 +28,7 @@ if ($result->num_rows > 0) {
 }
 
 // Fetch student details using the email
-$sql = "SELECT student_id, course_id FROM student WHERE email = ?";
+$sql = "SELECT student_id, course_id FROM students WHERE email = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $user_email);
 $stmt->execute();
@@ -44,7 +44,7 @@ if ($result->num_rows > 0) {
 }
 
 // Fetch timetable details for the course
-$sql = "SELECT day_of_week, start_time, end_time, subject_id, section 
+$sql = "SELECT subject_id, day, start_time, end_time
         FROM timetable_info 
         WHERE course_id = ?";
 $stmt = $conn->prepare($sql);
@@ -82,11 +82,11 @@ ob_end_flush();
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Day of Week</th>
+                                        <th>Day</th>
                                         <th>Start Time</th>
                                         <th>End Time</th>
                                         <th>Subject ID</th>
-                                        <th>Section</th>
+                                        <th>Course Id</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -97,7 +97,7 @@ ob_end_flush();
                                                 <td><?php echo htmlspecialchars($entry['start_time']); ?></td>
                                                 <td><?php echo htmlspecialchars($entry['end_time']); ?></td>
                                                 <td><?php echo htmlspecialchars($entry['subject_id']); ?></td>
-                                                <td><?php echo htmlspecialchars($entry['section']); ?></td>
+                                                <td><?php echo htmlspecialchars($entry['course_id']); ?></td>
                                             </tr>
                                         <?php endforeach; ?>
                                     <?php else: ?>

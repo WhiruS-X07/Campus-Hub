@@ -3,312 +3,233 @@ $pageTitle = "Register Page";
 include('includes/header.php');
 include('includes/config.php');
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 $error_message = "";
 $form_valid = true;
 $courses = [];
 
-$sql_courses = "SELECT course_id FROM course_info";
+// Fetch courses from course_details table
+$sql_courses = "SELECT course_id, course_name FROM course_details";
 $result_courses = $conn->query($sql_courses);
 
 if ($result_courses && $result_courses->num_rows > 0) {
     while ($row = $result_courses->fetch_assoc()) {
-        $courses[] = $row['course_id'];
+        $courses[] = $row;
     }
 }
+
+// Handle registration form
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (!empty($_POST['name']) && !empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['user_type'])) {
-
+    if (
+        !empty($_POST['name']) && !empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['user_type']) &&
+        !empty($_POST['dob']) && !empty($_POST['address']) && !empty($_POST['state']) && !empty($_POST['pincode']) &&
+        !empty($_POST['country'])
+    ) {
         $name = $conn->real_escape_string($_POST['name']);
+        $dob = $conn->real_escape_string($_POST['dob']);
+        $address = $conn->real_escape_string($_POST['address']);
+        $state = $conn->real_escape_string($_POST['state']);
+        $pincode = $conn->real_escape_string($_POST['pincode']);
+        $country = $conn->real_escape_string($_POST['country']);
         $email = $conn->real_escape_string($_POST['email']);
-        $password = $_POST['password'];
+        $phone_no = !empty($_POST['phone_no']) ? $conn->real_escape_string($_POST['phone_no']) : NULL;
+        $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
         $user_type = $_POST['user_type'];
-        $teacher_id = isset($_POST['teacher_id']) ? $conn->real_escape_string($_POST['teacher_id']) : null;
-        $student_id = isset($_POST['student_id']) ? $conn->real_escape_string($_POST['student_id']) : null;
-        $phone_no = $conn->real_escape_string($_POST['phone_no']);
-        $course = $user_type === 'student' ? $conn->real_escape_string($_POST['course']) : null;
+        $teacher_id = ($user_type === 'teacher') ? "TEACH" . $conn->real_escape_string($_POST['teacher_id']) : NULL;
+        $student_id = ($user_type === 'student') ? "IGN" . $conn->real_escape_string($_POST['student_id']) : NULL;
+        $course = ($user_type === 'student') ? $conn->real_escape_string($_POST['course']) : NULL;
 
-        $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-
-        // Check if the email already exists
-        $email_check_sql = "SELECT email FROM users WHERE email = ?";
-        $stmt_email_check = $conn->prepare($email_check_sql);
+        // Check if email already exists
+        $stmt_email_check = $conn->prepare("SELECT email FROM users_info WHERE email = ?");
         $stmt_email_check->bind_param("s", $email);
         $stmt_email_check->execute();
         $stmt_email_check->store_result();
 
         if ($stmt_email_check->num_rows > 0) {
-            // If email exists, show an error message
             $error_message = "This email is already registered. Please use a different email or log in.";
-            $form_valid = false;
         } else {
-            // Proceed with the rest of the code if the email does not exist
-            $stmt_email_check->close();
+            $conn->begin_transaction();
 
-            if ($user_type === 'teacher' || !empty($teacher_id)) {
-                $user_specific_id = $teacher_id;
-            } elseif ($user_type === 'student' && !empty($student_id)) {
-                $user_specific_id = $student_id;
-            } else {
-                $user_specific_id = null;
-            }
+            try {
+                $sql = "INSERT INTO users_info (name, email, password, user_type, phone_no) VALUES (?, ?, ?, ?, ?)";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("sssss", $name, $email, $password, $user_type, $phone_no);
+                $stmt->execute();
 
-            if ($form_valid) {
-                $conn->begin_transaction();
-
-                try {
-                    $sql = "INSERT INTO users (name, email, password, user_type, user_specific_id, phone_no, course) VALUES (?, ?, ?, ?, ?, ?, ?)";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("sssssss", $name, $email, $hashed_password, $user_type, $user_specific_id, $phone_no, $course);
-
-                    if ($stmt->execute()) {
-                        if ($user_type === 'teacher' && !empty($teacher_id)) {
-                            $sql_teacher = "INSERT INTO teacher (id, teacher_name, email, teacher_id, phone_no) VALUES (NULL, ?, ?, ?, ?)";
-                            $stmt_teacher = $conn->prepare($sql_teacher);
-                            $stmt_teacher->bind_param("ssss", $name, $email, $teacher_id, $phone_no);
-                            $stmt_teacher->execute();
-                            $stmt_teacher->close();
-                        } elseif ($user_type === 'student' && !empty($student_id)) {
-                            $sql_student = "INSERT INTO student (id, student_name, student_id, email, phone_no, course_id) VALUES (NULL, ?, ?, ?, ?, ?)";
-                            $stmt_student = $conn->prepare($sql_student);
-                            $stmt_student->bind_param("sssss", $name, $student_id, $email, $phone_no, $course);
-                            $stmt_student->execute();
-                            $stmt_student->close();
-                        }
-
-                        $conn->commit();
-
-                        $_SESSION['registration_success'] = true;
-                        header("Location: ./login.php");
-                        exit();
-                    } else {
-                        echo "Error: " . $stmt->error;
-                    }
-
-                    $stmt->close();
-                } catch (Exception $e) {
-                    $conn->rollback();
-                    echo "Error: " . $e->getMessage();
+                if ($user_type === 'teacher') {
+                    $sql_teacher = "INSERT INTO teachers (teacher_name, email, teach_id, phone_no, dob, address, state, pincode, country) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    $stmt_teacher = $conn->prepare($sql_teacher);
+                    $stmt_teacher->bind_param("sssssssss", $name, $email, $teacher_id, $phone_no, $dob, $address, $state, $pincode, $country);
+                    $stmt_teacher->execute();
+                } elseif ($user_type === 'student') {
+                    $sql_student = "INSERT INTO students (student_name, student_id, email, phone_no, course_id, dob, address, state, pincode, country) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    $stmt_student = $conn->prepare($sql_student);
+                    $stmt_student->bind_param("ssssssssss", $name, $student_id, $email, $phone_no, $course, $dob, $address, $state, $pincode, $country);
+                    $stmt_student->execute();
                 }
 
-                $conn->close();
+                $conn->commit();
+                echo "<div class='alert alert-success'>Registration successful!</div>";
+            } catch (Exception $e) {
+                $conn->rollback();
+                $error_message = "Registration failed: " . $e->getMessage();
             }
         }
     } else {
         $error_message = "Required fields are missing.";
-        $form_valid = false;
     }
 }
-
 ?>
 
-<style>
-    body,
-    html {
-        height: 100%;
-        margin: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #f8f9fa;
-    }
-
-    .form-container {
-        width: 100%;
-        max-width: 350px;
-        padding: 30px;
-        background-color: white;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        margin: 0 auto;
-    }
-
-    .error-message {
-        color: red;
-        font-size: 14px;
-        margin-bottom: 10px;
-        text-align: center;
-    }
-
-    .password-container {
-        position: relative;
-        width: 100%;
-    }
-
-    .password-container input {
-        width: 100%;
-        padding-right: 45px;
-        box-sizing: border-box;
-    }
-
-    .password-container .password-toggle {
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        cursor: pointer;
-        color: #888;
-        font-size: 1.2em;
-    }
-
-    .password-container input:focus {
-        outline: none;
-        border-color: #007bff;
-    }
-
-    .form-outline input,
-    .form-outline select {
-        width: 100%;
-    }
-
-    #studentIdContainer .row .col-md-6 {
-        padding-right: 10px;
-        padding-left: 10px;
-    }
-</style>
-
 <body>
-    <form method="post" action="">
-        <div class="form-container card " style="padding: 30px;">
-            <?php if (!empty($error_message)): ?>
-                <div class="error-message">
-                    <?php echo $error_message; ?>
+    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+        <form class="card p-5 shadow-lg" style="width: 100%; max-width: 600px; border-radius: 20px;" method="post"
+            action="register.php">
+            <div class="form-container text-center mb-4">
+                <h3 class="fw-bold">Create Your Account</h3>
+                <p class="text-muted">Fill in the details below to register</p>
+            </div>
+
+            <?php if (!empty($error_message)) { ?>
+                <div class="alert alert-danger text-center" role="alert"><?php echo $error_message; ?></div>
+            <?php } ?>
+
+            <!-- Name and DOB -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="registername" class="form-label">Name</label>
+                    <input type="text" id="registername" name="name" class="form-control" required />
                 </div>
-            <?php endif; ?>
-            <div style="display:block;">
-                <div style="display: flex;">
-                    <div style="margin-left: -50px; cursor: pointer;">
-                        <button type="button" class="btn btn-link btn-floating mx-1" style="padding-right: 5px;"
-                            onclick="window.location.href='./index.php';">
-                            <i class="fa-solid fa-arrow-left" style="font-size: 16px;"></i>
-                        </button>
-                    </div>
-                    <div style="flex-grow: 1">
-                        <ul class="nav nav-pills nav-justified mb-3" id="ex1" role="tablist" style="margin-top: 9px;">
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link" id="tab-login" href="./login.php" role="tab"
-                                    aria-controls="pills-login" aria-selected="false">Login</a>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link active" id="tab-register" href="#" role="tab"
-                                    aria-controls="pills-register" aria-selected="true">Register</a>
-                            </li>
-                        </ul>
-                    </div>
+                <div class="col-md-6">
+                    <label for="dob" class="form-label">Date of Birth</label>
+                    <input type="date" id="dob" name="dob" class="form-control" required />
                 </div>
             </div>
 
-            <div class="form-outline mb-4">
-                <label class="form-label" for="registername">Name</label>
-                <input type="text" id="registername" name="name" class="form-control" required />
+            <!-- Email and Phone -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="registerEmail" class="form-label">Email</label>
+                    <input type="email" id="registerEmail" name="email" class="form-control" required />
+                </div>
+                <div class="col-md-6">
+                    <label for="phone_no" class="form-label">Phone Number</label>
+                    <input type="text" id="phone_no" name="phone_no" class="form-control" required />
+                </div>
             </div>
 
-            <div class="form-outline mb-4">
-                <label class="form-label" for="registerEmail">Email</label>
-                <input type="email" id="registerEmail" name="email" class="form-control" required />
+            <!-- Address -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="address" class="form-label">Address</label>
+                    <input type="text" id="address" name="address" class="form-control" required />
+                </div>
+                <div class="col-md-6">
+                    <label for="state" class="form-label">State</label>
+                    <input type="text" id="state" name="state" class="form-control" required />
+                </div>
             </div>
 
-            <div class="form-outline mb-4">
-                <label class="form-label" for="phone_no">Phone Number</label>
-                <input type="text" id="phone_no" name="phone_no" class="form-control" required />
+            <!-- Pincode and Country -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="pincode" class="form-label">Pincode</label>
+                    <input type="text" id="pincode" name="pincode" class="form-control" required />
+                </div>
+                <div class="col-md-6">
+                    <label for="country" class="form-label">Country</label>
+                    <input type="text" id="country" name="country" class="form-control" required />
+                </div>
             </div>
 
-            <div class="form-outline mb-4">
-                <label class="form-label" for="userType">Your Role</label>
-                <select id="userType" name="user_type" class="form-control" required>
-                    <option value="" disabled selected>Select your role</option>
-                    <option value="teacher">Teacher</option>
-                    <option value="student">Student</option>
+            <!-- Role Selection -->
+            <label for="userType" class="form-label">Your Role</label>
+            <select id="userType" name="user_type" class="form-control mb-3" required onchange="toggleFields()">
+                <option value="" disabled selected>Select your role</option>
+                <option value="teacher">Teacher</option>
+                <option value="student">Student</option>
+            </select>
+
+            <!-- Teacher Fields -->
+            <div id="teacherIdContainer" class="mb-3" style="display: none;">
+                <label for="teacherId" class="form-label">Teacher ID</label>
+                <div class="input-group">
+                    <span class="input-group-text">TEACH</span>
+                    <input type="text" id="teacherId" name="teacher_id" class="form-control" maxlength="5"
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '')" placeholder="12345" />
+                </div>
+            </div>
+
+
+            <!-- Student Fields -->
+            <div id="studentIdContainer" class="mb-3" style="display: none;">
+                <label for="studentId" class="form-label">Student ID</label>
+                <div class="input-group">
+                    <span class="input-group-text">IGN</span>
+                    <input type="text" id="studentId" name="student_id" class="form-control" maxlength="5"
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '')" placeholder="12345" />
+                </div>
+
+
+                <label for="course" class="form-label">Course</label>
+                <select id="course" name="course" class="form-control">
+                    <option value="" disabled selected>Select a course</option>
+                    <?php foreach ($courses as $course) { ?>
+                        <option value="<?php echo $course['course_id']; ?>">
+                            <?php echo htmlspecialchars($course['course_name']); ?>
+                        </option>
+                    <?php } ?>
                 </select>
             </div>
 
-            <div id="teacherIdContainer" class="form-outline mb-4" style="display: none;">
-                <label class="form-label" for="teacherId">Teacher ID</label>
-                <input type="text" id="teacherId" name="teacher_id" class="form-control" />
-            </div>
-
-            <div id="studentIdContainer" class="form-outline mb-4" style="display: none;">
-                <div class="row">
-                    <div class="col-md-6">
-                        <label class="form-label" for="studentId">Student ID</label>
-                        <input type="text" id="studentId" name="student_id" class="form-control" />
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label" for="course">Course</label>
-                        <select type="text" id="course" name="course" class="form-control">
-                            <option value="" disabled selected>Select a course</option>
-                            <?php foreach ($courses as $course_id): ?>
-                                <option value="<?php echo $course_id; ?>"><?php echo $course_id; ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-outline mb-4">
-                <label class="form-label" for="registerPassword">Password</label>
-                <div class="password-container">
+            <!-- Password with Toggle -->
+            <div class="mb-3">
+                <label for="registerPassword" class="form-label">Password</label>
+                <div class="input-group">
                     <input type="password" id="registerPassword" name="password" class="form-control" required />
-                    <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+                    <span class="input-group-text">
+                        <input type="checkbox" onclick="togglePassword()" id="showPassword"> Show Password
+                    </span>
                 </div>
             </div>
 
-            <div class="form-check d-flex mb-4">
-                <input class="form-check-input me-2" type="checkbox" value="" id="registerCheck"
-                    aria-describedby="registerCheckHelpText" required />
-                <label class="form-check-label" for="registerCheck">
-                    I have read and agree to the terms.
-                </label>
+            <!-- Terms and Conditions -->
+            <div class="form-check mb-4">
+                <input class="form-check-input" type="checkbox" id="registerCheck" required />
+                <label class="form-check-label" for="registerCheck"> I agree to the terms and conditions. </label>
             </div>
 
-            <button type="submit" data-mdb-button-init data-mdb-ripple-init
-                class="btn btn-primary btn-block mb-3">Register</button>
-        </div>
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary w-100">Register</button>
 
-    </form>
-
-
+            <div class="text-center mt-3">
+                <p>Already registered? <a href="./login.php">Login here</a>.</p>
+                <a href="index.php" class="text-muted">&larr; Back to Home</a>
+            </div>
+        </form>
+    </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const repeatPasswordField = document.getElementById('registerPassword');
-            const toggleRepeatPasswordIcon = document.getElementById('togglePassword');
-
-            if (toggleRepeatPasswordIcon) {
-                toggleRepeatPasswordIcon.addEventListener('click', function () {
-                    if (repeatPasswordField.type === 'password') {
-                        repeatPasswordField.type = 'text';
-                        toggleRepeatPasswordIcon.classList.remove('fa-eye');
-                        toggleRepeatPasswordIcon.classList.add('fa-eye-slash');
-                    } else {
-                        repeatPasswordField.type = 'password';
-                        toggleRepeatPasswordIcon.classList.remove('fa-eye-slash');
-                        toggleRepeatPasswordIcon.classList.add('fa-eye');
-                    }
-                });
-            }
-
-            const userTypeSelect = document.getElementById('userType');
+        function toggleFields() {
+            const userType = document.getElementById('userType').value;
             const teacherIdContainer = document.getElementById('teacherIdContainer');
             const studentIdContainer = document.getElementById('studentIdContainer');
+            const studentIdInput = document.getElementById('studentId');
+            const teacherIdInput = document.getElementById('teacherId');
 
-            userTypeSelect.addEventListener('change', function () {
-                const selectedType = this.value;
+            teacherIdContainer.style.display = userType === 'teacher' ? 'block' : 'none';
+            studentIdContainer.style.display = userType === 'student' ? 'block' : 'none';
 
-                if (selectedType === 'teacher') {
-                    teacherIdContainer.style.display = 'block';
-                    studentIdContainer.style.display = 'none';
-                } else if (selectedType === 'student') {
-                    teacherIdContainer.style.display = 'none';
-                    studentIdContainer.style.display = 'block';
-                } else {
-                    teacherIdContainer.style.display = 'none';
-                    studentIdContainer.style.display = 'none';
-                }
-            });
-        });
+            teacherIdInput.required = (userType === 'teacher');
+            studentIdInput.required = (userType === 'student');
+        }
 
-
+        function togglePassword() {
+            var x = document.getElementById("registerPassword");
+            x.type = x.type === "password" ? "text" : "password";
+        }
 
     </script>
 </body>

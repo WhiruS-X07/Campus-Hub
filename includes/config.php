@@ -3,7 +3,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "sms";
+$dbname = "campus_hub";
 
 // Create connection
 $conn = mysqli_connect($servername, $username, $password, $dbname);

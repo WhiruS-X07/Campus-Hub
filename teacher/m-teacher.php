@@ -5,8 +5,6 @@ include("header.php");
 include("sidebar.php");
 include('../includes/config.php');
 
-
-
 if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
     header("Location: ../login.php");
     exit();
@@ -14,8 +12,7 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
 
 $user_id = $_SESSION['user_id'];
 
-
-$sql = "SELECT email FROM users WHERE id = ?";
+$sql = "SELECT email FROM users_info WHERE id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -29,7 +26,7 @@ if ($result->num_rows > 0) {
     exit();
 }
 
-$sql = "SELECT teacher_name, teacher_id, email, phone_no FROM teacher WHERE email = ?";
+$sql = "SELECT * FROM teachers WHERE email = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $user_email);
 $stmt->execute();
@@ -42,7 +39,6 @@ if ($result->num_rows > 0) {
     exit();
 }
 
-
 $stmt->close();
 $conn->close();
 ob_end_flush();
@@ -52,34 +48,29 @@ ob_end_flush();
     <div class="content-wrapper">
         <div class="row">
             <div class="col-lg-12">
-                <div class="card" style="border-radius: 8px;">
-                    <div class="card-body" style="padding-bottom: unset">
-                        <div class="row justify-content-center align-items-center">
-                            <div class="col-md col-sm-12">
-                                <div class="row justify-content-center align-items-center">
-                                    <div class="col-md-3 col-sm-12" style="flex: unset; width: unset;">
-                                        <img class="rounded-circle responsive" src="../assets/images/placeholder.jpg"
-                                            alt="user-image" />
-                                    </div>
-                                </div>
+                <div class="card shadow-lg rounded-lg">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-4 text-center">
+                                <img class="rounded-circle img-fluid"
+                                    src="<?php echo !empty($teacher['teacher_image']) ? '../uploads/' . htmlspecialchars($teacher['teacher_image']) : '../assets/images/teacher.jpg'; ?>"
+                                    alt="user-image" width="150" height="150" />
                             </div>
-                            <div class="col-md col-sm-12"></div>
-                            <div class="col-md-3 col-sm-12">
-                                <table class="table table-responsive table-borderless">
+                            <div class="col-md-8">
+                                <table class="table table-borderless">
                                     <tr>
-                                        <td class="badge badge-pill badge-info"><i class="fas fa-address-card"></i></td>
-                                        <td><strong><?php echo !empty($teacher['teacher_id']) ? htmlspecialchars($teacher['teacher_id']) : "Not available"; ?></strong>
+                                        <td><i class="fas fa-id-badge"></i> <strong>ID:</strong></td>
+                                        <td><?php echo htmlspecialchars($teacher['teach_id'] ?? "Not available"); ?>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="badge badge-pill badge-info"><i class="fas fa-phone"></i></td>
-                                        <td><strong><?php echo !empty($teacher['phone_no']) ? htmlspecialchars($teacher['phone_no']) : "Not available"; ?></strong>
+                                        <td><i class="fas fa-phone"></i> <strong>Phone:</strong></td>
+                                        <td><?php echo htmlspecialchars($teacher['phone_no'] ?? "Not available"); ?>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="badge badge-pill badge-info"><i class="fas fa-envelope"></i></td>
-                                        <td><strong><?php echo !empty($teacher['email']) ? htmlspecialchars($teacher['email']) : "Not available"; ?></strong>
-                                        </td>
+                                        <td><i class="fas fa-envelope"></i> <strong>Email:</strong></td>
+                                        <td><?php echo htmlspecialchars($teacher['email'] ?? "Not available"); ?></td>
                                     </tr>
                                 </table>
                             </div>
@@ -87,88 +78,41 @@ ob_end_flush();
                     </div>
                 </div>
 
-
-                <div class="card " style="border-radius: 8px; margin-top: 20px;">
+                <div class="card shadow-lg rounded-lg mt-4">
                     <div class="card-body">
-                        <h4><strong>Personal Details</strong></h4>
-                    </div>
-                    <hr>
-                    <div class="card-body table-responsive">
-                        <table class="table ">
+                        <h4 class="mb-3">Personal Details</h4>
+                        <table class="table table-striped">
                             <tr>
                                 <th>Full Name</th>
-                                <td colspan="4">
-                                    <?php echo !empty($teacher['teacher_name']) ? htmlspecialchars($teacher['teacher_name']) : "Not available"; ?>
-                                </td>
+                                <td><?php echo htmlspecialchars($teacher['teacher_name'] ?? "Not available"); ?></td>
                             </tr>
                             <tr>
                                 <th>Date of Birth</th>
-                                <td>Not available</td>
-                                <th>Teacher Id</th>
-                                <td><?php echo !empty($teacher['teacher_id']) ? htmlspecialchars($teacher['teacher_id']) : "Not available"; ?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Applicant's Email</th>
-                                <td><?php echo !empty($teacher['email']) ? htmlspecialchars($teacher['email']) : "Not available"; ?>
-                                </td>
-                                <th>Mobile Number</th>
-                                <td><?php echo !empty($teacher['phone_no']) ? htmlspecialchars($teacher['phone_no']) : "Not available"; ?>
-                                </td>
+                                <td><?php echo htmlspecialchars($teacher['dob'] ?? "Not available"); ?></td>
                             </tr>
                         </table>
                     </div>
                 </div>
 
-                <div class="card " style="border-radius: 8px; margin-top: 20px;">
+                <div class="card shadow-lg rounded-lg mt-4">
                     <div class="card-body">
-                        <h4><strong>Teaching Details</strong></h4>
-                    </div>
-                    <hr>
-                    <div class="card-body table-responsive">
-                        <table class="table ">
-                            <tr>
-                                <th>B.C.A</th>
-                                <td>Not available<br></td>
-                            </tr>
-                            <tr>
-                                <th>M.C.A</th>
-                                <td>Not available</td>
-                            </tr>
-                            <tr>
-                                <th>B.tech</th>
-                                <td>Not available</td>
-                            </tr>
-                            <tr>
-                                <th>B.Sc (Hons) Mathematics</th>
-                                <td>Not available</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="card " style="border-radius: 8px; margin-top: 20px;">
-                    <div class="card-body">
-                        <h4><strong>Correspondence Details</strong></h4>
-                    </div>
-                    <hr>
-                    <div class="card-body table-responsive">
-                        <table class="table ">
+                        <h4 class="mb-3">Correspondence Details</h4>
+                        <table class="table table-striped">
                             <tr>
                                 <th>Address</th>
-                                <td>Not available<br></td>
+                                <td><?php echo htmlspecialchars($teacher['address'] ?? "Not available"); ?></td>
                             </tr>
                             <tr>
-                                <th>District</th>
-                                <td>Not available</td>
+                                <th>State</th>
+                                <td><?php echo htmlspecialchars($teacher['state'] ?? "Not available"); ?></td>
                             </tr>
                             <tr>
-                                <th>State, Pincode</th>
-                                <td>Not available</td>
+                                <th>Pincode</th>
+                                <td><?php echo htmlspecialchars($teacher['pincode'] ?? "Not available"); ?></td>
                             </tr>
                             <tr>
                                 <th>Country</th>
-                                <td>Not available</td>
+                                <td><?php echo htmlspecialchars($teacher['country'] ?? "Not available"); ?></td>
                             </tr>
                         </table>
                     </div>

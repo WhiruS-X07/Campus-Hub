@@ -13,7 +13,7 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['course_id'])) {
     $course_id = $_POST['course_id'];
 
-    $sql_delete = "DELETE FROM course_info WHERE course_id = ?";
+    $sql_delete = "DELETE FROM course_details WHERE course_id = ?";
     $stmt = $conn->prepare($sql_delete);
     $stmt->bind_param("s", $course_id);
     $result = $stmt->execute();
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['course_id'])) {
     exit();
 }
 
-$sql_courses = "SELECT course_id, course_name, course_type, duration, description, fee_structure, eligibility, specialization FROM course_info";
+$sql_courses = "SELECT * FROM course_details";
 $result_courses = $conn->query($sql_courses);
 
 if (!$result_courses) {
@@ -77,41 +77,45 @@ ob_end_flush();
         background-color: rgba(111, 66, 193, 0.7);
     }
 </style>
+
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="row">
             <?php while ($course = $result_courses->fetch_assoc()): ?>
                 <div class="col-lg-4 col-md-6 col-sm-12">
-                    <div class="card" style="margin-top: 20px;">
+                    <div class="card shadow-sm" style="margin-top: 20px; border-radius: 12px; overflow: hidden;">
                         <div class="card-body">
-                            <h5 class="font-weight-bold text-center" style="font-size: 1.25rem;">
+                            <h5 class="font-weight-bold text-center text-primary" style="font-size: 1.35rem;">
                                 <?php echo htmlspecialchars($course['course_name']); ?>
-                                (<?php echo htmlspecialchars($course['course_id']); ?>)
                             </h5>
+                            <p class="text-center text-muted mb-2">(<?php echo htmlspecialchars($course['course_id']); ?>)
+                            </p>
                             <hr class="divider">
-                            <!-- Store the full description in a data attribute -->
-                            <p class="description"
-                                data-full-description="<?php echo htmlspecialchars($course['description']); ?>"
-                                style="margin-bottom: 20px;">
-                                <?php echo htmlspecialchars(substr($course['description'], 0, 100)); ?>...
+
+                            <!-- Full description stored in a data attribute -->
+                            <p class="description text-justify"
+                                data-full-description="<?php echo htmlspecialchars($course['course_description']); ?>">
+                                <?php echo htmlspecialchars(substr($course['course_description'], 0, 120)); ?>...
                             </p>
+
                             <div class="d-flex justify-content-between flex-wrap">
-                                <p class="mb-1"><strong>Duration:</strong>
-                                    <?php echo htmlspecialchars($course['duration']); ?></p>
-                                <p class="mb-1"><strong>Fee:</strong> ₹
-                                    <?php echo htmlspecialchars($course['fee_structure']); ?>
-                                </p>
+                                <p><strong>Duration:</strong> <?php echo htmlspecialchars($course['duration']); ?></p>
+                                <p><strong>Fee:</strong> ₹<?php echo htmlspecialchars($course['fee_structure']); ?></p>
                             </div>
-                            <p>
-                                <strong>Eligibility:</strong> <?php echo htmlspecialchars($course['eligibility']); ?>
-                            </p>
+                            <div class="d-flex justify-content-between flex-wrap">
+                                <p><strong>Eligibility:</strong> <?php echo htmlspecialchars($course['eligibility']); ?></p>
+                                <p><strong>Course Type:</strong> <?php echo htmlspecialchars($course['course_type']); ?></p>
+                            </div>
+                            <p><strong>Price:</strong> ₹<?php echo htmlspecialchars($course['price']); ?></p>
+
                             <div class="d-flex justify-content-between align-items-center flex-wrap">
                                 <p class="mb-1 text-wrap"
                                     style="word-wrap: break-word; overflow-wrap: break-word; max-width: 75%;">
                                     <strong>Specialization:</strong>
                                     <?php echo htmlspecialchars($course['specialization']); ?>
                                 </p>
-                                <form style="display: inline;" method="post" action="" onsubmit="return confirmDelete();">
+
+                                <form method="post" action="" onsubmit="return confirmDelete();" style="display: inline;">
                                     <input type="hidden" name="course_id"
                                         value="<?php echo htmlspecialchars($course['course_id']); ?>">
                                     <button type="submit" name="delete" class="btn btn-danger btn-sm delete-btn">

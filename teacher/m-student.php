@@ -8,45 +8,42 @@ if (isset($_POST['submit'])) {
     $student_img = $_FILES['student_img']['name'];
     $student_name = $_POST['student_name'];
     $student_id = $_POST['student_id'];
+    $dob = $_POST['dob'];
     $email = $_POST['email'];
     $phone_no = $_POST['phone_no'];
-    $course = $_POST['course'];
-    $section = $_POST['section'];
-    $semester_year = $_POST['semester_year'];
+    $address = $_POST['address'];
+    $state = $_POST['state'];
+    $pincode = $_POST['pincode'];
+    $country = $_POST['country'];
+    $course_id = $_POST['course_id'];
 
-    $target_dir = "./assets/upload/";
+    $target_dir = "../assets/uploads/";
     $target_file = $target_dir . basename($student_img);
     $image_path = $target_file;
 
     if (!is_dir($target_dir)) {
         mkdir($target_dir, 0777, true);
     }
+
     if (move_uploaded_file($_FILES['student_img']['tmp_name'], $target_file)) {
-
-        if (isset($_POST['edit_id']) && $_POST['edit_id'] != '') {
-            // Update student record
+        if (!empty($_POST['edit_id'])) {
             $edit_id = $_POST['edit_id'];
-            $sql = "UPDATE student_info SET student_img='$image_path', student_name='$student_name', email='$email', phone_no='$phone_no', course='$course', section='$section', semester_year='$semester_year' WHERE student_id='$edit_id'";
+            $sql = "UPDATE students SET student_img='$image_path', student_name='$student_name', dob='$dob', email='$email', phone_no='$phone_no', address='$address', state='$state', pincode='$pincode', country='$country', course_id='$course_id' WHERE student_id='$edit_id'";
         } else {
-            // Check for duplicate student_id
-            $check_query = "SELECT * FROM student_info WHERE student_id = '$student_id'";
+            $check_query = "SELECT * FROM students WHERE student_id = '$student_id'";
             $check_result = mysqli_query($conn, $check_query);
-
             if (mysqli_num_rows($check_result) > 0) {
-                // If a duplicate exists, show error
-                $error = "A student with this ID already exists. Please use a different ID.";
+                $error = "A student with this ID already exists.";
             } else {
-                // Insert new student record
-                $sql = "INSERT INTO student_info (student_img, student_name, student_id, email, phone_no, course, section, semester_year) 
-                        VALUES ('$image_path', '$student_name', '$student_id', '$email', '$phone_no', '$course', '$section', '$semester_year')";
+                $sql = "INSERT INTO students (student_img, student_name, student_id, dob, email, phone_no, address, state, pincode, country, course_id) 
+                        VALUES ('$image_path', '$student_name', '$student_id', '$dob', '$email', '$phone_no', '$address', '$state', '$pincode', '$country', '$course_id')";
             }
         }
 
-        // Execute SQL query and handle success or error
-        if (mysqli_query($conn, $sql)) {
+        if (isset($sql) && mysqli_query($conn, $sql)) {
             $msg = "Student information saved successfully!";
         } else {
-            $error = "Error: " . $sql . "<br>" . mysqli_error($conn);
+            $error = "Error: " . mysqli_error($conn);
         }
     } else {
         $error = "Failed to upload the student image.";
@@ -55,14 +52,13 @@ if (isset($_POST['submit'])) {
 
 if (isset($_POST['search'])) {
     $search_query = mysqli_real_escape_string($conn, $_POST['search_query']);
-    $sql = "SELECT * FROM student_info WHERE student_name LIKE '%$search_query%' OR student_id LIKE '%$search_query%' OR course LIKE '%$search_query%'";
+    $sql = "SELECT * FROM students WHERE student_name LIKE '%$search_query%' OR student_id LIKE '%$search_query%' OR course_id LIKE '%$search_query%'";
     $result = mysqli_query($conn, $sql);
 }
 
 if (isset($_POST['delete'])) {
     $delete_id = $_POST['delete_id'];
-    $sql = "DELETE FROM student_info WHERE student_id='$delete_id'";
-
+    $sql = "DELETE FROM students WHERE student_id='$delete_id'";
     if (mysqli_query($conn, $sql)) {
         $msg = "Student deleted successfully!";
     } else {
@@ -72,7 +68,7 @@ if (isset($_POST['delete'])) {
 
 if (isset($_POST['edit'])) {
     $edit_id = $_POST['edit_id'];
-    $edit_sql = "SELECT * FROM student_info WHERE student_id='$edit_id'";
+    $edit_sql = "SELECT * FROM students WHERE student_id='$edit_id'";
     $edit_result = mysqli_query($conn, $edit_sql);
     $edit_data = mysqli_fetch_assoc($edit_result);
 }
@@ -95,6 +91,7 @@ if (isset($_POST['edit'])) {
                         <form class="form-sample" method="POST" enctype="multipart/form-data">
                             <input type="hidden" name="edit_id"
                                 value="<?php echo isset($edit_data['student_id']) ? $edit_data['student_id'] : ''; ?>">
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -111,6 +108,7 @@ if (isset($_POST['edit'])) {
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -122,14 +120,23 @@ if (isset($_POST['edit'])) {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
+                                        <label>Date of Birth</label>
+                                        <input type="date" name="dob" class="form-control"
+                                            value="<?php echo isset($edit_data['dob']) ? $edit_data['dob'] : ''; ?>"
+                                            required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <label>Email</label>
                                         <input type="email" name="email" class="form-control"
                                             value="<?php echo isset($edit_data['email']) ? $edit_data['email'] : ''; ?>"
                                             required>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Phone Number</label>
@@ -138,36 +145,62 @@ if (isset($_POST['edit'])) {
                                             required>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Course</label>
-                                        <input type="text" name="course" class="form-control"
-                                            value="<?php echo isset($edit_data['course']) ? $edit_data['course'] : ''; ?>"
-                                            required>
-                                    </div>
-                                </div>
                             </div>
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Section</label>
-                                        <input type="text" name="section" class="form-control"
-                                            value="<?php echo isset($edit_data['section']) ? $edit_data['section'] : ''; ?>"
+                                        <label>Address</label>
+                                        <input type="text" name="address" class="form-control"
+                                            value="<?php echo isset($edit_data['address']) ? $edit_data['address'] : ''; ?>"
                                             required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Semester/Year</label>
-                                        <input type="text" name="semester_year" class="form-control"
-                                            value="<?php echo isset($edit_data['semester_year']) ? $edit_data['semester_year'] : ''; ?>"
+                                        <label>State</label>
+                                        <input type="text" name="state" class="form-control"
+                                            value="<?php echo isset($edit_data['state']) ? $edit_data['state'] : ''; ?>"
                                             required>
                                     </div>
                                 </div>
                             </div>
-                            <button type="submit" name="submit"
-                                class="btn btn-primary"><?php echo isset($edit_data) ? 'Update Student' : 'Add Student'; ?></button>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Pincode</label>
+                                        <input type="text" name="pincode" class="form-control"
+                                            value="<?php echo isset($edit_data['pincode']) ? $edit_data['pincode'] : ''; ?>"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Country</label>
+                                        <input type="text" name="country" class="form-control"
+                                            value="<?php echo isset($edit_data['country']) ? $edit_data['country'] : ''; ?>"
+                                            required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Course ID</label>
+                                        <input type="text" name="course_id" class="form-control"
+                                            value="<?php echo isset($edit_data['course_id']) ? $edit_data['course_id'] : ''; ?>"
+                                            required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" name="submit" class="btn btn-primary">
+                                <?php echo isset($edit_data) ? 'Update Student' : 'Add Student'; ?>
+                            </button>
                         </form>
+
                     </div>
                 </div>
             </div>
@@ -179,7 +212,7 @@ if (isset($_POST['edit'])) {
                     <h4 class="card-title">Manage Students</h4>
                     <form method="POST" class="form-inline mb-3 d-flex">
                         <input type="text" name="search_query" class="form-control me-3"
-                            placeholder="Enter Student Name, ID, or Course" required>
+                            placeholder="Enter Student Name, ID, or Course ID" required>
                         <button type="submit" name="search" class="btn btn-primary">Search</button>
                     </form>
 
@@ -193,24 +226,19 @@ if (isset($_POST['edit'])) {
                                         <th>Student ID</th>
                                         <th>Email</th>
                                         <th>Phone No</th>
-                                        <th>Course</th>
-                                        <th>Section</th>
-                                        <th>Semester/Year</th>
+                                        <th>Course ID</th>
                                         <th class="text-right">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php while ($row = mysqli_fetch_assoc($result)): ?>
                                         <tr>
-                                            <td><img src="<?php echo $row['student_img']; ?>" alt="Student Image" width="50"
-                                                    height="50"></td>
+                                            <td><img src="<?php echo $row['student_img']; ?>" width="50" height="50"></td>
                                             <td><?php echo $row['student_name']; ?></td>
                                             <td><?php echo $row['student_id']; ?></td>
                                             <td><?php echo $row['email']; ?></td>
                                             <td><?php echo $row['phone_no']; ?></td>
-                                            <td><?php echo $row['course']; ?></td>
-                                            <td><?php echo $row['section']; ?></td>
-                                            <td><?php echo $row['semester_year']; ?></td>
+                                            <td><?php echo $row['course_id']; ?></td>
                                             <td class="text-right">
                                                 <form method="POST" style="display:inline-block;">
                                                     <input type="hidden" name="edit_id"
@@ -228,13 +256,12 @@ if (isset($_POST['edit'])) {
                                     <?php endwhile; ?>
                                 </tbody>
                             </table>
-                        <?php elseif (isset($result)): ?>
-                            <p>No students found matching your search criteria.</p>
-                        <?php endif; ?>
-                    </div>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 <?php include("footer.php"); ?>

@@ -5,7 +5,7 @@ include("header.php");
 include("sidebar.php");
 include('../includes/config.php');
 
-$course_query = "SELECT * FROM course_info";
+$course_query = "SELECT * FROM course_details";
 $course_result = mysqli_query($conn, $course_query);
 
 $subject_result = [];
@@ -13,7 +13,7 @@ $selected_course_id = "";
 
 if (isset($_POST['course_id'])) {
     $selected_course_id = $_POST['course_id'];
-    $subject_query = "SELECT * FROM subject_info WHERE course_id='$selected_course_id'";
+    $subject_query = "SELECT * FROM subject_details WHERE course_id='$selected_course_id'";
     $subject_result = mysqli_query($conn, $subject_query);
 }
 
@@ -26,8 +26,7 @@ if (isset($_GET['id'])) {
 
 if (isset($_POST['save_timetable'])) {
     $course_id = $_POST['course_id'];
-    $section = $_POST['section'];
-    $day_of_week = $_POST['day_of_week'];
+    $day = $_POST['day'];
     $start_time = $_POST['start_time'];
     $end_time = $_POST['end_time'];
     $subject_id = $_POST['subject_id'];
@@ -35,22 +34,27 @@ if (isset($_POST['save_timetable'])) {
     if ($timetable_entry) {
         $update_query = "UPDATE timetable_info SET 
                             course_id='$course_id', 
-                            section='$section', 
-                            day_of_week='$day_of_week', 
+                            day='$day', 
                             start_time='$start_time', 
                             end_time='$end_time', 
                             subject_id='$subject_id' 
                         WHERE id='$timetable_id'";
-        mysqli_query($conn, $update_query);
-        header('Location: m-timetable.php?msg=Timetable Updated Successfully');
-        exit;
+       if (mysqli_query($conn, $update_query)) {
+        $_SESSION['success_msg'] = "Timetable Updated Successfully";
     } else {
-        $insert_query = "INSERT INTO timetable_info (course_id, section, day_of_week, start_time, end_time, subject_id) 
-                         VALUES ('$course_id', '$section', '$day_of_week', '$start_time', '$end_time', '$subject_id')";
-        mysqli_query($conn, $insert_query);
-        header('Location: m-timetable.php?msg=Timetable Added Successfully');
-        exit;
+        $_SESSION['error_msg'] = "Error updating timetable: " . mysqli_error($conn);
     }
+} else {
+    $insert_query = "INSERT INTO timetable_info (course_id, day, start_time, end_time, subject_id) 
+                     VALUES ('$course_id', '$day', '$start_time', '$end_time', '$subject_id')";
+    if (mysqli_query($conn, $insert_query)) {
+        $_SESSION['success_msg'] = "Timetable Added Successfully";
+    } else {
+        $_SESSION['error_msg'] = "Error adding timetable: " . mysqli_error($conn);
+    }
+}
+header('Location: m-timetable.php');
+exit;
 }
 ob_end_flush();
 ?>
@@ -96,8 +100,8 @@ ob_end_flush();
                     </div>
 
                     <div class="form-group">
-                        <label for="day_of_week">Day of Week:</label>
-                        <select name="day_of_week" id="day_of_week" class="form-control" required>
+                        <label for="day">Day:</label>
+                        <select name="day" id="day" class="form-control" required>
                             <option value="">Select Day</option>
                             <?php
                             $days_of_week = [
@@ -111,16 +115,11 @@ ob_end_flush();
                             ];
                             foreach ($days_of_week as $value => $day): ?>
                                 <option value="<?php echo $value; ?>" 
-                                    <?php if ($timetable_entry && $timetable_entry['day_of_week'] == $value) echo 'selected'; ?>>
+                                    <?php if ($timetable_entry && $timetable_entry['day'] == $value) echo 'selected'; ?>>
                                     <?php echo $day; ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="section">Section:</label>
-                        <input type="text" name="section" class="form-control" value="<?php echo $timetable_entry ? $timetable_entry['section'] : ''; ?>" required>
                     </div>
                     <div class="form-group">
                         <label for="start_time">Start Time:</label>
@@ -130,7 +129,7 @@ ob_end_flush();
                         <label for="end_time">End Time:</label>
                         <input type="time" name="end_time" class="form-control" value="<?php echo $timetable_entry ? $timetable_entry['end_time'] : ''; ?>" required>
                     </div>
-
+                    
                     <button type="submit" name="save_timetable" class="btn btn-primary mt-4">
                         <?php echo $timetable_entry ? 'Update Timetable' : 'Add Timetable'; ?>
                     </button>

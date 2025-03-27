@@ -86,7 +86,7 @@ include("sidebar.php");
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row gap-0.8">
                     <div class="col-md-5 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
@@ -150,7 +150,7 @@ include("sidebar.php");
                         </div>
                     </div>
 
-                    <div class="col-md-7 grid-margin stretch-card">
+                    <div class="col-md-7 pe-0 grid-margin stretch-card" >
                         <div class="card">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between">

@@ -4,25 +4,37 @@ include("header.php");
 include("sidebar.php");
 include('../includes/config.php');
 
+// Check database connection
+if (!$conn) {
+    die("Database Connection Failed: " . mysqli_connect_error());
+}
+
+// Pagination setup
 $limit = 15;
 $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
+// Search functionality
 $search_query = "";
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])) {
-    $search_query = $_POST['search'];
+    $search_query = trim($_POST['search']);
 }
 
-// Prepare the search query
-$sql_student_info = "SELECT * FROM student_info WHERE student_name LIKE ? OR course LIKE ? LIMIT ? OFFSET ?";
+// Prepare and execute the query
+$sql_student_info = "SELECT * FROM students WHERE student_name LIKE ? OR course_id LIKE ? LIMIT ? OFFSET ?";
 $stmt = $conn->prepare($sql_student_info);
+
+if (!$stmt) {
+    die("Query Preparation Failed: " . $conn->error);
+}
+
 $search_param = "%" . $search_query . "%";
 $stmt->bind_param("ssii", $search_param, $search_param, $limit, $offset);
 $stmt->execute();
 $result_student_info = $stmt->get_result();
 
-// Count the total results for pagination
-$sql_count = "SELECT COUNT(*) AS total FROM student_info WHERE student_name LIKE ? OR course LIKE ?";
+// Count total students for pagination
+$sql_count = "SELECT COUNT(*) AS total FROM students WHERE student_name LIKE ? OR course_id LIKE ?";
 $stmt_count = $conn->prepare($sql_count);
 $stmt_count->bind_param("ss", $search_param, $search_param);
 $stmt_count->execute();
@@ -31,27 +43,25 @@ $total_students = $total_students_result->fetch_assoc()['total'];
 
 $total_pages = ceil($total_students / $limit);
 ?>
+
 <div class="main-panel">
     <div class="content-wrapper">
-        <!-- Responsive Row for Heading and Search Form -->
+        <!-- Page Heading & Search Bar -->
         <div class="row mb-4">
-            <!-- Heading Column -->
             <div class="col-12 col-lg-6 mb-2 mb-lg-0">
-                <h2>Students Information!</h2>
+                <h2>Students Information</h2>
             </div>
-
-            <!-- Search Form Column -->
             <div class="col-12 col-lg-6 d-flex justify-content-lg-end">
-                <!-- Adjusted Form Layout -->
                 <form method="POST"
                     class="d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center w-100">
                     <input type="text" name="search" value="<?php echo htmlspecialchars($search_query); ?>"
-                        placeholder="Search" class="form-control me-lg-2 mb-2 mb-lg-0" >
+                        placeholder="Search" class="form-control me-lg-2 mb-2 mb-lg-0">
                     <button type="submit" class="btn btn-primary w-100 w-lg-auto">Search</button>
                 </form>
             </div>
         </div>
-        <!-- Responsive Table Wrapper -->
+
+        <!-- Student Data Table -->
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
                 <thead>
@@ -62,9 +72,8 @@ $total_pages = ceil($total_students / $limit);
                         <th>Student ID</th>
                         <th>Email</th>
                         <th>Phone No</th>
-                        <th>Course</th>
-                        <th>Section</th>
-                        <th>Semester Year</th>
+                        <th>Course ID</th>
+                        <th>Address</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -82,14 +91,13 @@ $total_pages = ceil($total_students / $limit);
                                 <td><?php echo htmlspecialchars($row['student_id']); ?></td>
                                 <td><?php echo htmlspecialchars($row['email']); ?></td>
                                 <td><?php echo htmlspecialchars($row['phone_no']); ?></td>
-                                <td><?php echo htmlspecialchars($row['course']); ?></td>
-                                <td><?php echo htmlspecialchars($row['section']); ?></td>
-                                <td><?php echo htmlspecialchars($row['semester_year']); ?></td>
+                                <td><?php echo htmlspecialchars($row['course_id']); ?></td>
+                                <td><?php echo htmlspecialchars($row['address']); ?></td>
                             </tr>
                         <?php endwhile; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="9" class="text-center">No students found</td>
+                            <td colspan="8" class="text-center">No students found</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
@@ -139,8 +147,4 @@ $total_pages = ceil($total_students / $limit);
     </div>
 </div>
 
-
-
-<?php
-include("footer.php");
-?>
+<?php include("footer.php"); ?>
